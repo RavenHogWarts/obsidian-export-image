@@ -10,8 +10,6 @@ import Target, { type TargetRef } from '../common/Target';
 import FormItems from '../common/form/FormItems';
 import { type CSSFileInfo, getCSSFiles, readCSSFile } from '../../utils/cssLoader';
 
-
-
 const ModalContent: FC<{
   markdownEl: Node;
   settings: ISettings;
@@ -248,12 +246,6 @@ const ModalContent: FC<{
     },
   ], [cssFiles]);
 
-  // 添加日志检查函数
-  useEffect(() => {
-    console.log("ModalContent rendered, loading state:", isLoading);
-    console.log("markdownEl content:", markdownEl instanceof HTMLElement ? markdownEl.innerHTML.substring(0, 100) + "..." : "Not HTML Element");
-  }, [isLoading, markdownEl]);
-
   const calculateScale = useCallback(() => {
     if (!root.current?.element || !previewOutRef.current) return 1;
     const contentHeight = root.current.element.clientHeight;
@@ -302,7 +294,6 @@ const ModalContent: FC<{
     });
   }, [formData.format]);
 
-  // 加载 CSS 文件列表
   useEffect(() => {
     if (formData.customCSS?.src) {
       getCSSFiles(app, formData.customCSS.src).then(files => {
@@ -313,7 +304,6 @@ const ModalContent: FC<{
     }
   }, [app, formData.customCSS?.src]);
 
-  // 读取选中的 CSS 文件内容
   useEffect(() => {
     const cssPath = formData.customCSS?.css;
     if (cssPath) {
