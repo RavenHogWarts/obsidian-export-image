@@ -46,6 +46,11 @@ declare type ISettings = {
     overlap: number;
     mode: SplitMode;
   };
+  customCSS: {
+    enable: boolean;
+    src: string;
+    css: string | null;
+  };
 };
 
 type ConditionType<T> = { flag: any; path: string } | ((data: T) => boolean);
