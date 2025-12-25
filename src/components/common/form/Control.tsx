@@ -4,7 +4,7 @@ import set from 'lodash/set';
 import debounce from 'lodash/debounce';
 import { requestUrl, setIcon, type App, Modal } from 'obsidian';
 import { fileToBase64 } from '../../../utils';
-import L from '../../../L';
+import L from '../../../i18n/L';
 import ImageSelectModal from '../imageSelectModal';
 import { getRemoteImageUrl } from 'src/utils/capture';
 

@@ -1,4 +1,4 @@
-import {type App, Modal, type TFile} from 'obsidian';
+import { type App, Modal, type TFile } from 'obsidian';
 import React, {
   type FC,
   useCallback,
@@ -6,16 +6,16 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {type Root, createRoot} from 'react-dom/client';
-import {createHtml, fileToBase64} from '../../utils';
-import L from '../../L';
+import { type Root, createRoot } from 'react-dom/client';
+import { createHtml, fileToBase64 } from '../../utils';
+import L from '../../i18n/L';
 
 const ImageSelect: FC<{
   imageList: TFile[];
   app: App;
   onSelect: (img: string) => void;
   onClose: () => void;
-}> = ({imageList, app, onSelect, onClose}) => {
+}> = ({ imageList, app, onSelect, onClose }) => {
   const [list, setList] = useState<TFile[]>(imageList);
   const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState<TFile | undefined>(
@@ -51,7 +51,7 @@ const ImageSelect: FC<{
   const submit = useCallback(async () => {
     if (selected) {
       const file = await selected.vault.adapter.readBinary(selected.path);
-      const blob = new Blob([file], {type: 'image/' + selected.extension});
+      const blob = new Blob([file], { type: 'image/' + selected.extension });
       const url = await fileToBase64(blob);
       onSelect(url);
     }
@@ -107,7 +107,7 @@ const ImageSelect: FC<{
           className='mod-cta'
           disabled={!selected}
           onClick={submit}
-          style={{marginRight: 40}}
+          style={{ marginRight: 40 }}
         >
           {L.imageSelect.select()}
         </button>
@@ -126,7 +126,7 @@ export default class ImageSelectModal extends Modal {
   }
 
   onOpen() {
-    const {contentEl, select} = this;
+    const { contentEl, select } = this;
     const imageList = this.app.vault
       .getFiles()
       .filter(file => /^jpe?g|png$/i.test(file.extension || ''));
@@ -145,7 +145,7 @@ export default class ImageSelectModal extends Modal {
   }
 
   onClose() {
-    const {contentEl, root} = this;
+    const { contentEl, root } = this;
     root?.unmount();
     contentEl.empty();
   }

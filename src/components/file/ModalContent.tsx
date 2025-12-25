@@ -5,10 +5,11 @@ import React, {
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { isCopiable } from 'src/imageFormatTester';
 import { copy, save, saveAll } from '../../utils/capture';
-import L from '../../L';
+import L from '../../i18n/L';
 import Target, { type TargetRef } from '../common/Target';
 import FormItems from '../common/form/FormItems';
 import { type CSSFileInfo, getCSSFiles, readCSSFile } from '../../utils/cssLoader';
+import './ModalContent.css';
 
 const ModalContent: FC<{
   markdownEl: Node;

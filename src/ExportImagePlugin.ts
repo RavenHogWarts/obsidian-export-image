@@ -6,12 +6,12 @@ import {
   Editor,
   MarkdownView,
 } from 'obsidian';
-import L from './L';
+import L from './i18n/L';
 import { isMarkdownFile, getMetadata } from './utils';
-import { DEFAULT_SETTINGS } from './settings';
+import { DEFAULT_SETTINGS } from './types/settings';
 import exportFolder from './components/folder/exportFolder';
 import exportImage from './components/file/exportImage';
-import ImageSettingTab from './SettingsTab';
+import ImageSettingTab from './settings/SettingsTab';
 
 export default class ExportImagePlugin extends Plugin {
   settings: ISettings;

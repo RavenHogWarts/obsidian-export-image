@@ -1,4 +1,6 @@
 import process from 'node:process';
+import fs from 'node:fs';
+import path from 'node:path';
 import esbuild from 'esbuild';
 import builtins from 'builtin-modules';
 
@@ -9,6 +11,28 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const prod = process.argv[2] === 'production';
+
+const cssOutputPlugin = () => ({
+  name: "css-output-plugin",
+  setup(build) {
+    build.onEnd(async (result) => {
+      const file = build.initialOptions.outfile;
+      // rename css file
+      const parent = path.dirname(file);
+      const cssFileName = parent + "/main.css";
+      const newCssFileName = parent + "/styles.css";
+
+      try {
+        if (fs.existsSync(cssFileName)) {
+          fs.renameSync(cssFileName, newCssFileName);
+        }
+      } catch (e) {
+        console.error("Failed to rename file:", e);
+      }
+    });
+  },
+});
+
 
 const result = await esbuild
   .build({
@@ -21,6 +45,7 @@ const result = await esbuild
     },
     entryPoints: ['main.ts'],
     bundle: true,
+    plugins: [cssOutputPlugin()],
     external: [
       'obsidian',
       'electron',

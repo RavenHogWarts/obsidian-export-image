@@ -6,10 +6,10 @@ import React, {
   useState,
 } from 'react';
 import { type App, TFile, TFolder } from 'obsidian';
-import L from 'src/L';
+import L from 'src/i18n/L';
 import { delay, isMarkdownFile } from 'src/utils';
 import { saveMultipleFiles } from 'src/utils/capture';
-import { formatAvailable } from 'src/settings';
+import { formatAvailable } from 'src/types/settings';
 import FormItems from '../common/form/FormItems';
 
 const ModalContent: FC<{

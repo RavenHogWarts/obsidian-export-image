@@ -1,10 +1,10 @@
 import React, { type FC, useEffect, useState, useCallback } from 'react';
 import type { App } from 'obsidian';
 import type ExportImagePlugin from 'src/ExportImagePlugin';
-import FormItems from '../common/form/FormItems';
+import FormItems from '../components/common/form/FormItems';
 import { createSettingSchema } from './settingSchema';
-import { renderPreview } from 'src/settingPreview';
-import L from 'src/L';
+import { renderPreview } from 'src/settings/settingPreview';
+import L from 'src/i18n/L';
 
 interface SettingPageProps {
     app: App;

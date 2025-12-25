@@ -1,6 +1,6 @@
-import {type Locales} from './i18n/i18n-types';
-import {baseLocale, i18n, locales} from './i18n/i18n-util';
-import {loadAllLocales} from './i18n/i18n-util.sync';
+import { type Locales } from './i18n-types';
+import { baseLocale, i18n, locales } from './i18n-util';
+import { loadAllLocales } from './i18n-util.sync';
 
 loadAllLocales();
 

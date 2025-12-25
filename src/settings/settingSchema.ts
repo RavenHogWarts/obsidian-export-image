@@ -1,6 +1,6 @@
 import type { App } from 'obsidian';
-import L from 'src/L';
-import { formatAvailable } from 'src/settings';
+import L from 'src/i18n/L';
+import { formatAvailable } from 'src/types/settings';
 import { type CSSFileInfo, getCSSFiles } from 'src/utils/cssLoader';
 import type ExportImagePlugin from 'src/ExportImagePlugin';
 
