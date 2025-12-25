@@ -1,8 +1,8 @@
 import React, { StrictMode } from "react";
 import { App, PluginSettingTab } from "obsidian";
-import ExportImagePlugin from "./ExportImagePlugin";
+import ExportImagePlugin from "../ExportImagePlugin";
 import { Root, createRoot } from "react-dom/client";
-import SettingPage from "./components/settings/SettingPage";
+import SettingPage from "./SettingPage";
 
 
 export default class ImageSettingTab extends PluginSettingTab {

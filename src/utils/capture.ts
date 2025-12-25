@@ -5,7 +5,7 @@ import saveAs from 'file-saver';
 import JsPdf from 'jspdf';
 import JSZip from 'jszip';
 import domtoimage from '../dom-to-image-more';
-import L from '../L';
+import L from '../i18n/L';
 import makeHTML from './makeHTML';
 import { fileToBase64, delay, getMime } from '.';
 import { calculateSplitPositions, getElementMeasures } from './split';

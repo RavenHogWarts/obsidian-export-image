@@ -1,7 +1,7 @@
 import React from 'react';
 import { type App, Modal, type TFolder } from 'obsidian';
 import { createRoot } from 'react-dom/client';
-import L from '../../L';
+import L from '../../i18n/L';
 import ModalContent from './ModalContent';
 
 export default async function (app: App, settings: ISettings, folder: TFolder) {

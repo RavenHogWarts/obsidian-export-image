@@ -2,7 +2,7 @@ import React, { type FC, useEffect, useRef, useState } from 'react';
 import { type App, MarkdownRenderChild, MarkdownRenderer } from 'obsidian';
 import { createRoot } from 'react-dom/client';
 import { Watermark, type WatermarkProps } from '@pansy/react-watermark';
-import { getRemoteImageUrl } from './utils/capture';
+import { getRemoteImageUrl } from '../utils/capture';
 
 const defaultConfig: WatermarkProps = {
   monitor: false,

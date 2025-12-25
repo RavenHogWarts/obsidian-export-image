@@ -12,7 +12,7 @@ import {
   type TFile,
 } from 'obsidian';
 import { createRoot } from 'react-dom/client';
-import L from '../../L';
+import L from '../../i18n/L';
 import ModalContent from './ModalContent';
 import { preprocessMarkdown } from 'src/utils/preprocessMarkdown';
 import Target from '../common/Target';
