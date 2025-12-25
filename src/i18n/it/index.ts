@@ -130,6 +130,22 @@ const it = {
     preview: 'Anteprima effetto filigrana',
     reset: 'Ripristina predefiniti',
     recursive: 'Includi note nelle sottodirectory',
+    customCSS: {
+      title: 'CSS',
+      enable: {
+        label: 'Abilita CSS',
+        description: 'Abilita CSS, supporta selezione CSS dal repository corrente.',
+      },
+      src: {
+        label: 'Cartella CSS',
+        description: 'Cartella di destinazione per il CSS.',
+      },
+      css: {
+        label: 'CSS',
+        description: 'Imposta il CSS da caricare. Seleziona un selettore CSS con .export-image-root per assicurare lo scope corretto.',
+        default: 'Stile predefinito'
+      },
+    }
   },
   imageSelect: {
     search: 'Cerca',

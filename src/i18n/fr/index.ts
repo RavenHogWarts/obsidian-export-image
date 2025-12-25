@@ -136,6 +136,22 @@ const fr = {
     preview: 'Aperçu de l\'effet du filigrane',
     reset: 'Réinitialiser par défaut',
     recursive: 'Inclure les notes des sous-répertoires',
+    customCSS: {
+      title: 'CSS',
+      enable: {
+        label: 'Activer CSS',
+        description: 'Activer CSS, supporte la sélection de CSS depuis le dépôt actuel.',
+      },
+      src: {
+        label: 'Dossier CSS',
+        description: 'Dossier de destination pour le CSS.',
+      },
+      css: {
+        label: 'CSS',
+        description: 'Définissez le CSS à charger. Sélectionnez un sélecteur CSS avec .export-image-root pour assurer le bon scope.',
+        default: 'Style par défaut'
+      },
+    }
   },
   imageSelect: {
     search: 'Rechercher',

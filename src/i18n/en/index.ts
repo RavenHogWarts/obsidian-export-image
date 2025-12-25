@@ -136,6 +136,22 @@ const en = {
     preview: 'Watermark effect preview',
     reset: 'Reset to default',
     recursive: 'Include notes from subdirectories',
+    customCSS: {
+      title: 'Custom CSS',
+      enable: {
+        label: 'Enable custom CSS',
+        description: 'Enable custom CSS, support selecting CSS files from the current vault.',
+      },
+      src: {
+        label: 'CSS folder',
+        description: 'The folder where CSS files are stored.',
+      },
+      css: {
+        label: 'CSS file',
+        description: 'Custom CSS content.',
+        default: 'Default style',
+      },
+    }
   },
   imageSelect: {
     search: 'Search',

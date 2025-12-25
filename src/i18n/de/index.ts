@@ -136,6 +136,22 @@ const de = {
     preview: 'Wasserzeichen-Effektvorschau',
     reset: 'Auf Standard zurücksetzen',
     recursive: 'Notizen aus Unterordnern einbeziehen',
+    customCSS: {
+      title: 'CSS',
+      enable: {
+        label: 'CSS aktivieren',
+        description: 'CSS aktivieren, unterstützt CSS aus aktuellem Tresor auswählen.',
+      },
+      src: {
+        label: 'CSS-Ordner',
+        description: 'CSS-Ordner.',
+      },
+      css: {
+        label: 'CSS',
+        description: 'CSS-Datei auswählen. CSS-Selektor sollte mit .export-image-root beginnen, um die korrekte Scope zu gewährleisten.',
+        default: 'Standardstil'
+      },
+    }
   },
   imageSelect: {
     search: 'Suchen',

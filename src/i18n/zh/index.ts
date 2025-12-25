@@ -133,6 +133,22 @@ const zh = {
     preview: '水印效果预览',
     reset: '重置为默认',
     recursive: '包含子目录中的笔记',
+    customCSS: {
+      title: '自定义 CSS',
+      enable: {
+        label: '启用自定义 CSS',
+        description: '启用自定义 CSS，支持从当前仓库选择 CSS 文件。',
+      },
+      src: {
+        label: 'CSS 文件夹',
+        description: '存放 CSS 文件的文件夹。',
+      },
+      css: {
+        label: 'CSS 文件',
+        description: '设置加载的自定义 CSS 文件。CSS 选择器应以 .export-image-root 为前缀以确保正确作用域。',
+        default: '默认样式'
+      },
+    }
   },
   imageSelect: {
     search: '搜索',

@@ -130,6 +130,22 @@ const ja = {
     preview: 'ウォーターマークの効果をプレビュー',
     reset: 'デフォルトにリセット',
     recursive: 'サブディレクトリのノートを含む',
+    customCSS: {
+      title: 'カスタムCSS',
+      enable: {
+        label: 'カスタムCSSを有効にする',
+        description: 'カスタムCSSを有効にする、現在のボールトからCSSファイルを選択できます。',
+      },
+      src: {
+        label: 'CSSファイル',
+        description: 'CSSファイルの場所。',
+      },
+      css: {
+        label: 'CSSファイル',
+        description: 'CSSファイルを設定します。CSS 选择器应以 .export-image-root 为前缀以确保正确作用域。',
+        default: 'デフォルトスタイル'
+      },
+    }
   },
   imageSelect: {
     search: '検索',

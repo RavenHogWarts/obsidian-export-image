@@ -130,6 +130,22 @@ const es = {
     preview: 'Vista previa del efecto de la marca de agua',
     reset: 'Restablecer a los valores por defecto',
     recursive: 'Incluir notas de subdirectorios',
+    customCSS: {
+      title: 'CSS personalizado',
+      enable: {
+        label: 'Activar CSS personalizado',
+        description: 'Activar CSS personalizado, soporta selección de CSS desde el repositorio actual.',
+      },
+      src: {
+        label: 'Carpeta CSS',
+        description: 'Carpeta de CSS.',
+      },
+      css: {
+        label: 'CSS',
+        description: 'CSS para cargar. Selecciona un selector CSS con .export-image-root para asegurar el scope correcto.',
+        default: 'Estilo por defecto'
+      },
+    }
   },
   imageSelect: {
     search: 'Buscar',
