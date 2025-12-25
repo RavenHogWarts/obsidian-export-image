@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && cross-env NODE_ENV=production node esbuild.config.mjs production",
+    "build:local": "tsc -noEmit -skipLibCheck && cross-env NODE_ENV=production node esbuild.config.mjs production && node scripts/copy-to-vault.mjs",
     "version": "node version-bump.mjs && git add manifest.json versions.json",
     "typesafe-i18n": "typesafe-i18n",
     "lint": "xo",
@@ -43,6 +44,7 @@
     "@types/react-dom": "^19.0.2",
     "clsx": "^2.1.1",
     "dom-to-image-more": "^3.5.0",
+    "dotenv": "^17.2.3",
     "file-saver": "^2.0.5",
     "jspdf": "^2.5.2",
     "jszip": "^3.10.1",

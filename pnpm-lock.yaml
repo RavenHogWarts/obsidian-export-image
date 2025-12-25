@@ -26,6 +26,9 @@ importers:
       dom-to-image-more:
         specifier: ^3.5.0
         version: 3.5.0
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       file-saver:
         specifier: ^2.0.5
         version: 2.0.5
@@ -1009,6 +1012,10 @@ packages:
 
   dompurify@2.5.8:
     resolution: {integrity: sha512-o1vSNgrmYMQObbSSvF/1brBYEQPHhV1+gsmrusO7/GXtp1T9rCS8cXFqVxK/9crT1jA6Ccv+5MTSjBNqr7Sovw==}
+
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+    engines: {node: '>=12'}
 
   dunder-proto@1.0.0:
     resolution: {integrity: sha512-9+Sj30DIu+4KvHqMfLUGLFYL2PkURSYMVXJyXe92nFRvlYq5hBjLEhblKB+vkd/WVlUYMWigiY07T91Fkk0+4A==}
@@ -3872,6 +3879,8 @@ snapshots:
 
   dompurify@2.5.8:
     optional: true
+
+  dotenv@17.2.3: {}
 
   dunder-proto@1.0.0:
     dependencies:
