@@ -8,6 +8,7 @@ import { lowerCase } from 'lodash';
 import clsx from 'clsx';
 import { getRemoteImageUrl } from 'src/utils/capture';
 import { calculateSplitLines, getElementMeasures } from 'src/utils/split';
+import { processObTemplate } from 'src/utils/templates';
 
 const alignMap = {
   left: 'flex-start',
@@ -224,7 +225,7 @@ const Target = forwardRef<
                   <div className='user-info-name'>{setting.authorInfo.name}</div>
                   {setting.authorInfo.remark && (
                     <div className='user-info-remark'>
-                      {setting.authorInfo.remark}
+                      {processObTemplate(setting.authorInfo.remark)}
                     </div>
                   )}
                 </div>
