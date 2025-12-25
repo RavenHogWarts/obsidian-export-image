@@ -1,7 +1,5 @@
 import {
   Plugin,
-  PluginSettingTab,
-  type App,
   TFile,
   Notice,
   TFolder,
@@ -12,9 +10,8 @@ import L from './L';
 import { isMarkdownFile, getMetadata } from './utils';
 import { DEFAULT_SETTINGS } from './settings';
 import exportFolder from './components/folder/exportFolder';
-import { createSettingConfig } from './formConfig';
-import { SettingRenderer } from './SettingRenderer';
 import exportImage from './components/file/exportImage';
+import ImageSettingTab from './SettingsTab';
 
 export default class ExportImagePlugin extends Plugin {
   settings: ISettings;
@@ -173,20 +170,5 @@ export default class ExportImagePlugin extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
-  }
-}
-
-class ImageSettingTab extends PluginSettingTab {
-  plugin: ExportImagePlugin;
-  settingRenderer: SettingRenderer;
-
-  constructor(app: App, plugin: ExportImagePlugin) {
-    super(app, plugin);
-    this.plugin = plugin;
-    this.settingRenderer = new SettingRenderer(app, plugin, this.containerEl);
-  }
-
-  async display(): Promise<void> {
-    await this.settingRenderer.render(await createSettingConfig(this.app, this.plugin));
   }
 }

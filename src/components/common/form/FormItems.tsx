@@ -30,7 +30,6 @@ const FormItems: FC<{
           <div
             className='setting-item'
             key={fieldSchema.path}
-            style={{ padding: '10px 0' }}
           >
             <div className='setting-item-info'>
               <div className='setting-item-name'>{fieldSchema.label}</div>
