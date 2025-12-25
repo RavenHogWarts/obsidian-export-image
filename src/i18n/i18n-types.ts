@@ -11,9 +11,11 @@ export type Locales =
 	| 'de'
 	| 'en'
 	| 'es'
+	| 'fi'
 	| 'fr'
 	| 'hu'
 	| 'id'
+	| 'it'
 	| 'ja'
 	| 'ko'
 	| 'ms'
@@ -65,7 +67,7 @@ type RootTranslation = {
 	save: string
 	/**
 	 * E​x​p​o​r​t​ ​a​n​d​ ​s​a​v​e​ ​t​h​e​ ​i​m​a​g​e​ ​a​s​ ​{​f​i​l​e​P​a​t​h​}​.
-	 * @param {string} filePath
+	 * @param {unknown} filePath
 	 */
 	saveSuccess: RequiredParams<'filePath'>
 	/**
@@ -105,7 +107,7 @@ type RootTranslation = {
 	 */
 	invalidWidth: string
 	/**
-	 * 分辨率模式
+	 * U​s​e​ ​r​e​s​o​l​u​t​i​o​n​ ​i​m​a​g​e
 	 */
 	resolutionMode: string
 	/**
@@ -143,7 +145,7 @@ type RootTranslation = {
 			 */
 			label: string
 			/**
-			 * S​e​t​ ​t​h​e​ ​w​i​d​t​h​ ​o​f​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 6​4​0​p​x​.
+			 * S​e​t​ ​t​h​e​ ​w​i​d​t​h​ ​o​f​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​6​4​0​p​x​.
 			 */
 			description: string
 		}
@@ -153,7 +155,7 @@ type RootTranslation = {
 			 */
 			title: string
 			/**
-			 * S​e​t​ ​p​a​d​d​i​n​g​ ​f​o​r​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 6​p​x​ ​f​o​r​ ​a​l​l​ ​s​i​d​e​s​.
+			 * S​e​t​ ​p​a​d​d​i​n​g​ ​f​o​r​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​6​p​x​ ​f​o​r​ ​a​l​l​ ​s​i​d​e​s​.
 			 */
 			description: string
 			/**
@@ -210,7 +212,7 @@ type RootTranslation = {
 				 */
 				label: string
 				/**
-				 * S​e​t​ ​t​h​e​ ​h​e​i​g​h​t​ ​o​f​ ​e​a​c​h​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​s​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 1​0​0​0​p​x​.
+				 * S​e​t​ ​t​h​e​ ​h​e​i​g​h​t​ ​o​f​ ​e​a​c​h​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​s​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​1​0​0​0​p​x​.
 				 */
 				description: string
 			}
@@ -220,7 +222,7 @@ type RootTranslation = {
 				 */
 				label: string
 				/**
-				 * S​e​t​ ​t​h​e​ ​o​v​e​r​l​a​p​ ​b​e​t​w​e​e​n​ ​a​d​j​a​c​e​n​t​ ​s​p​l​i​t​ ​i​m​a​g​e​s​ ​t​o​ ​p​r​e​v​e​n​t​ ​c​o​n​t​e​n​t​ ​f​r​o​m​ ​b​e​i​n​g​ ​c​u​t​ ​o​f​f​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 4​0​p​x​.
+				 * S​e​t​ ​t​h​e​ ​o​v​e​r​l​a​p​ ​b​e​t​w​e​e​n​ ​a​d​j​a​c​e​n​t​ ​s​p​l​i​t​ ​i​m​a​g​e​s​ ​t​o​ ​p​r​e​v​e​n​t​ ​c​o​n​t​e​n​t​ ​f​r​o​m​ ​b​e​i​n​g​ ​c​u​t​ ​o​f​f​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​4​0​p​x​.
 				 */
 				description: string
 			}
@@ -237,11 +239,11 @@ type RootTranslation = {
 		}
 		resolutionMode: {
 			/**
-			 * E​n​a​b​l​e​ ​2​x​ ​r​e​s​o​l​u​t​i​o​n​ ​i​m​a​g​e
+			 * R​e​s​o​l​u​t​i​o​n​ ​m​o​d​e​ ​i​m​a​g​e
 			 */
 			label: string
 			/**
-			 * S​e​t​ ​w​h​e​t​h​e​r​ ​t​o​ ​e​n​a​b​l​e​ ​2​x​ ​r​e​s​o​l​u​t​i​o​n​ ​i​m​a​g​e​.​ ​I​m​a​g​e​s​ ​w​i​t​h​ ​2​x​ ​r​e​s​o​l​u​t​i​o​n​ ​w​i​l​l​ ​a​p​p​e​a​r​ ​s​h​a​r​p​e​r​ ​a​n​d​ ​p​r​o​v​i​d​e​ ​a​ ​b​e​t​t​e​r​ ​e​x​p​e​r​i​e​n​c​e​ ​o​n​ ​h​i​g​h​ ​P​P​I​ ​s​c​r​e​e​n​s​,​ ​s​u​c​h​ ​a​s​ ​t​h​o​s​e​ ​o​n​ ​s​m​a​r​t​p​h​o​n​e​s​.​ ​H​o​w​e​v​e​r​,​ ​t​h​e​ ​d​o​w​n​s​i​d​e​ ​i​s​ ​t​h​a​t​ ​t​h​e​ ​f​i​l​e​ ​s​i​z​e​ ​o​f​ ​t​h​e​ ​i​m​a​g​e​s​ ​i​s​ ​l​a​r​g​e​r​.
+			 * S​e​t​ ​r​e​s​o​l​u​t​i​o​n​ ​m​o​d​e​,​ ​u​s​i​n​g​ ​1​x​,​ ​2​x​,​ ​3​x​,​ ​4​x​ ​r​e​s​o​l​u​t​i​o​n​ ​i​m​a​g​e​s​.​ ​W​h​e​n​ ​e​n​a​b​l​e​d​,​ ​i​m​a​g​e​s​ ​w​i​l​l​ ​a​p​p​e​a​r​ ​s​h​a​r​p​e​r​,​ ​w​i​t​h​ ​a​ ​b​e​t​t​e​r​ ​e​x​p​e​r​i​e​n​c​e​ ​o​n​ ​h​i​g​h​ ​P​P​I​ ​s​c​r​e​e​n​s​ ​l​i​k​e​ ​s​m​a​r​t​p​h​o​n​e​s​.​ ​T​h​e​ ​d​o​w​n​s​i​d​e​ ​i​s​ ​t​h​a​t​ ​t​h​e​ ​i​m​a​g​e​ ​f​i​l​e​ ​s​i​z​e​ ​w​i​l​l​ ​i​n​c​r​e​a​s​e​.
 			 */
 			description: string
 		}
@@ -261,19 +263,19 @@ type RootTranslation = {
 			 */
 			description: string
 			/**
-			 * .​p​n​g​ ​-​ ​d​e​f​a​u​l​t
+			 * p​n​g​ ​-​ ​d​e​f​a​u​l​t
 			 */
 			png0: string
 			/**
-			 * .​p​n​g​ ​-​ ​t​r​a​n​s​p​a​r​e​n​t​ ​b​a​c​k​g​r​o​u​n​d​ ​i​m​a​g​e
+			 * p​n​g​ ​-​ ​e​x​p​o​r​t​ ​t​r​a​n​s​p​a​r​e​n​t​ ​b​a​c​k​g​r​o​u​n​d​ ​i​m​a​g​e
 			 */
 			png1: string
 			/**
-			 * .​j​p​g​ ​-​ ​j​p​g​ ​f​o​r​m​a​t​ ​i​m​a​g​e
+			 * j​p​g​ ​-​ ​e​x​p​o​r​t​ ​j​p​g​ ​i​m​a​g​e
 			 */
 			jpg: string
 			/**
-			 * .​p​d​f​ ​-​ ​s​i​n​g​l​e​ ​p​a​g​e​ ​p​d​f
+			 * p​d​f​ ​-​ ​e​x​p​o​r​t​ ​s​i​n​g​l​e​ ​p​a​g​e​ ​p​d​f
 			 */
 			pdf: string
 		}
@@ -311,7 +313,7 @@ type RootTranslation = {
 			 */
 			name: string
 			/**
-			 * W​h​e​r​e​ ​t​o​ ​d​i​s​p​l​a​y
+			 * D​i​s​p​l​a​y​ ​p​o​s​i​t​i​o​n
 			 */
 			position: string
 			/**
@@ -319,7 +321,7 @@ type RootTranslation = {
 			 */
 			remark: string
 			/**
-			 * A​l​i​g​n
+			 * A​l​i​g​n​m​e​n​t
 			 */
 			align: string
 			/**
@@ -338,7 +340,7 @@ type RootTranslation = {
 				 */
 				label: string
 				/**
-				 * E​n​a​b​l​e​ ​w​a​t​e​r​m​a​r​k​,​ ​s​u​p​p​o​r​t​t​i​n​g​ ​t​e​x​t​ ​w​a​t​e​r​m​a​r​k​ ​a​n​d​ ​i​m​a​g​e​ ​w​a​t​e​r​m​a​r​k​.
+				 * E​n​a​b​l​e​ ​w​a​t​e​r​m​a​r​k​,​ ​s​u​p​p​o​r​t​i​n​g​ ​t​e​x​t​ ​w​a​t​e​r​m​a​r​k​ ​a​n​d​ ​i​m​a​g​e​ ​w​a​t​e​r​m​a​r​k​.
 				 */
 				description: string
 			}
@@ -362,7 +364,7 @@ type RootTranslation = {
 			}
 			text: {
 				/**
-				 * T​e​x​t​ ​c​o​n​t​e​n​t
+				 * W​a​t​e​r​m​a​r​k​ ​t​e​x​t​ ​c​o​n​t​e​n​t
 				 */
 				content: string
 				/**
@@ -385,7 +387,7 @@ type RootTranslation = {
 					 */
 					upload: string
 					/**
-					 * S​e​l​e​c​t​ ​f​r​o​m​ ​v​a​u​l​t
+					 * S​e​l​e​c​t​ ​f​r​o​m​ ​c​u​r​r​e​n​t​ ​v​a​u​l​t
 					 */
 					select: string
 				}
@@ -416,7 +418,7 @@ type RootTranslation = {
 			y: string
 		}
 		/**
-		 * W​a​t​e​r​m​a​r​k​ ​p​r​e​v​i​e​w
+		 * W​a​t​e​r​m​a​r​k​ ​e​f​f​e​c​t​ ​p​r​e​v​i​e​w
 		 */
 		preview: string
 		/**
@@ -427,6 +429,46 @@ type RootTranslation = {
 		 * I​n​c​l​u​d​e​ ​n​o​t​e​s​ ​f​r​o​m​ ​s​u​b​d​i​r​e​c​t​o​r​i​e​s
 		 */
 		recursive: string
+		customCSS: {
+			/**
+			 * C​u​s​t​o​m​ ​C​S​S
+			 */
+			title: string
+			enable: {
+				/**
+				 * E​n​a​b​l​e​ ​c​u​s​t​o​m​ ​C​S​S
+				 */
+				label: string
+				/**
+				 * E​n​a​b​l​e​ ​c​u​s​t​o​m​ ​C​S​S​,​ ​s​u​p​p​o​r​t​ ​s​e​l​e​c​t​i​n​g​ ​C​S​S​ ​f​i​l​e​s​ ​f​r​o​m​ ​t​h​e​ ​c​u​r​r​e​n​t​ ​v​a​u​l​t​.
+				 */
+				description: string
+			}
+			src: {
+				/**
+				 * C​S​S​ ​f​o​l​d​e​r
+				 */
+				label: string
+				/**
+				 * T​h​e​ ​f​o​l​d​e​r​ ​w​h​e​r​e​ ​C​S​S​ ​f​i​l​e​s​ ​a​r​e​ ​s​t​o​r​e​d​.
+				 */
+				description: string
+			}
+			css: {
+				/**
+				 * C​S​S​ ​f​i​l​e
+				 */
+				label: string
+				/**
+				 * C​u​s​t​o​m​ ​C​S​S​ ​c​o​n​t​e​n​t​.
+				 */
+				description: string
+				/**
+				 * D​e​f​a​u​l​t​ ​s​t​y​l​e
+				 */
+				'default': string
+			}
+		}
 	}
 	imageSelect: {
 		/**
@@ -509,7 +551,7 @@ export type TranslationFunctions = {
 	/**
 	 * Export and save the image as {filePath}.
 	 */
-	saveSuccess: (arg: { filePath: string }) => LocalizedString
+	saveSuccess: (arg: { filePath: unknown }) => LocalizedString
 	/**
 	 * Failed to save the image
 	 */
@@ -547,7 +589,7 @@ export type TranslationFunctions = {
 	 */
 	invalidWidth: () => LocalizedString
 	/**
-	 * Enable 2x resolution image
+	 * Use resolution image
 	 */
 	resolutionMode: () => LocalizedString
 	/**
@@ -679,11 +721,11 @@ export type TranslationFunctions = {
 		}
 		resolutionMode: {
 			/**
-			 * Enable 2x resolution image
+			 * Resolution mode image
 			 */
 			label: () => LocalizedString
 			/**
-			 * Set whether to enable 2x resolution image. Images with 2x resolution will appear sharper and provide a better experience on high PPI screens, such as those on smartphones. However, the downside is that the file size of the images is larger.
+			 * Set resolution mode, using 1x, 2x, 3x, 4x resolution images. When enabled, images will appear sharper, with a better experience on high PPI screens like smartphones. The downside is that the image file size will increase.
 			 */
 			description: () => LocalizedString
 		}
@@ -703,19 +745,19 @@ export type TranslationFunctions = {
 			 */
 			description: () => LocalizedString
 			/**
-			 * .png - default
+			 * png - default
 			 */
 			png0: () => LocalizedString
 			/**
-			 * .png - transparent background image
+			 * png - export transparent background image
 			 */
 			png1: () => LocalizedString
 			/**
-			 * .jpg - jpg format image
+			 * jpg - export jpg image
 			 */
 			jpg: () => LocalizedString
 			/**
-			 * .pdf - single page pdf
+			 * pdf - export single page pdf
 			 */
 			pdf: () => LocalizedString
 		}
@@ -753,7 +795,7 @@ export type TranslationFunctions = {
 			 */
 			name: () => LocalizedString
 			/**
-			 * Where to display
+			 * Display position
 			 */
 			position: () => LocalizedString
 			/**
@@ -761,7 +803,7 @@ export type TranslationFunctions = {
 			 */
 			remark: () => LocalizedString
 			/**
-			 * Align
+			 * Alignment
 			 */
 			align: () => LocalizedString
 			/**
@@ -780,7 +822,7 @@ export type TranslationFunctions = {
 				 */
 				label: () => LocalizedString
 				/**
-				 * Enable watermark, supportting text watermark and image watermark.
+				 * Enable watermark, supporting text watermark and image watermark.
 				 */
 				description: () => LocalizedString
 			}
@@ -804,7 +846,7 @@ export type TranslationFunctions = {
 			}
 			text: {
 				/**
-				 * Text content
+				 * Watermark text content
 				 */
 				content: () => LocalizedString
 				/**
@@ -827,7 +869,7 @@ export type TranslationFunctions = {
 					 */
 					upload: () => LocalizedString
 					/**
-					 * Select from vault
+					 * Select from current vault
 					 */
 					select: () => LocalizedString
 				}
@@ -858,7 +900,7 @@ export type TranslationFunctions = {
 			y: () => LocalizedString
 		}
 		/**
-		 * Watermark preview
+		 * Watermark effect preview
 		 */
 		preview: () => LocalizedString
 		/**
@@ -869,6 +911,46 @@ export type TranslationFunctions = {
 		 * Include notes from subdirectories
 		 */
 		recursive: () => LocalizedString
+		customCSS: {
+			/**
+			 * Custom CSS
+			 */
+			title: () => LocalizedString
+			enable: {
+				/**
+				 * Enable custom CSS
+				 */
+				label: () => LocalizedString
+				/**
+				 * Enable custom CSS, support selecting CSS files from the current vault.
+				 */
+				description: () => LocalizedString
+			}
+			src: {
+				/**
+				 * CSS folder
+				 */
+				label: () => LocalizedString
+				/**
+				 * The folder where CSS files are stored.
+				 */
+				description: () => LocalizedString
+			}
+			css: {
+				/**
+				 * CSS file
+				 */
+				label: () => LocalizedString
+				/**
+				 * Custom CSS content.
+				 */
+				description: () => LocalizedString
+				/**
+				 * Default style
+				 */
+				'default': () => LocalizedString
+			}
+		}
 	}
 	imageSelect: {
 		/**

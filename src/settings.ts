@@ -44,6 +44,11 @@ export const DEFAULT_SETTINGS: ISettings = {
     overlap: 80,
     mode: 'none' as SplitMode,
   },
+  customCSS: {
+    enable: false,
+    src: '',
+    css: '',
+  },
 };
 
 const formatList: FileFormat[] = ['png0', 'png1', 'jpg', 'webp', 'pdf'];

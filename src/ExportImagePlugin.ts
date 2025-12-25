@@ -187,6 +187,6 @@ class ImageSettingTab extends PluginSettingTab {
   }
 
   async display(): Promise<void> {
-    await this.settingRenderer.render(await createSettingConfig(this.app));
+    await this.settingRenderer.render(await createSettingConfig(this.app, this.plugin));
   }
 }

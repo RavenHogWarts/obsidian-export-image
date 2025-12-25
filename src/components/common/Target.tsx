@@ -34,8 +34,9 @@ const Target = forwardRef<
     scale?: number;
     isProcessing: boolean;
     onSplitChange?: (positions: number[]) => void;
+    customCSS?: string;
   }
->(({ frontmatter, setting, title, metadataMap, markdownEl, scale = 1, isProcessing, onSplitChange }, ref) => {
+>(({ frontmatter, setting, title, metadataMap, markdownEl, scale = 1, isProcessing, onSplitChange, customCSS }, ref) => {
   const [watermarkProps, setWatermarkProps] = useState<WatermarkProps>({});
   const contentRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -145,6 +146,7 @@ const Target = forwardRef<
 
   return (
     <div ref={clipRef}>
+      {customCSS && <style>{customCSS}</style>}
       <div
         className={clsx('export-image-root markdown-reading-view', frontmatter?.cssclasses || frontmatter?.cssclass)}
         ref={rootRef}

@@ -10,9 +10,11 @@ import da from './da'
 import de from './de'
 import en from './en'
 import es from './es'
+import fi from './fi'
 import fr from './fr'
 import hu from './hu'
 import id from './id'
+import it from './it'
 import ja from './ja'
 import ko from './ko'
 import ms from './ms'
@@ -30,9 +32,11 @@ const localeTranslations = {
 	de,
 	en,
 	es,
+	fi,
 	fr,
 	hu,
 	id,
+	it,
 	ja,
 	ko,
 	ms,
