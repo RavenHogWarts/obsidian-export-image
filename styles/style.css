@@ -22,6 +22,10 @@
     box-sizing: border-box;
 }
 
+.export-image-preview-left .setting-item {
+    padding: 10px 0 !important;
+}
+
 .export-image-preview-right {
     width: 50%;
     padding: 20px;
