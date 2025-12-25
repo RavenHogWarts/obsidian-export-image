@@ -55,7 +55,7 @@ declare type ISettings = {
 
 type ConditionType<T> = { flag: any; path: string } | ((data: T) => boolean);
 
-type ValueType = 'number' | 'string' | 'boolean' | 'file';
+type ValueType = 'number' | 'string' | 'boolean' | 'file' | 'color';
 
 type BaseFieldSchema<T> = {
   label: string;

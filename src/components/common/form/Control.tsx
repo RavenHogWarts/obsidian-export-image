@@ -233,6 +233,19 @@ const Control: FC<{
         </div>
       );
     }
+
+    case 'color': {
+      return (
+        <input
+          type='color'
+          value={value ?? '#cccccc'}
+          onChange={e => {
+            onChange(e.target.value);
+          }}
+          style={{ width: '60px', height: '30px', padding: '0', border: 'none', cursor: 'pointer' }}
+        />
+      );
+    }
   }
 };
 
