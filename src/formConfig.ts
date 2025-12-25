@@ -2,6 +2,8 @@ import type { App } from 'obsidian';
 import L from 'src/L';
 import { formatAvailable } from 'src/settings';
 import { delay } from './utils';
+import { type CSSFileInfo, getCSSFiles } from 'src/utils/cssLoader';
+import ExportImagePlugin from './ExportImagePlugin';
 
 // 从 type.d.ts 中引入类型
 type FileFormat = 'png0' | 'png1' | 'jpg' | 'webp' | 'pdf';
@@ -19,8 +21,18 @@ export interface SettingItem<T = any> {
   show?: (settings: ISettings) => boolean;
 }
 
-export const createSettingConfig = async (app: App): Promise<SettingItem[]> => {
+export const createSettingConfig = async (app: App, plugin: ExportImagePlugin): Promise<SettingItem[]> => {
   await delay(50);
+
+  let cssFiles: CSSFileInfo[] = [];
+  if (plugin.settings.customCSS.src) {
+    try {
+      cssFiles = await getCSSFiles(app, plugin.settings.customCSS.src);
+    } catch (e) {
+      console.warn('Failed to load css files', e);
+    }
+  }
+
   return [
     {
       id: 'width',
@@ -256,6 +268,28 @@ export const createSettingConfig = async (app: App): Promise<SettingItem[]> => {
       type: 'number',
       placeholder: '100',
       show: (settings) => settings.watermark.enable,
+    },
+    {
+      id: 'customCSS.enable',
+      label: L.setting.customCSS.enable.label(),
+      description: L.setting.customCSS.enable.description(),
+      type: 'toggle',
+    },
+    {
+      id: 'customCSS.src',
+      label: L.setting.customCSS.src.label(),
+      type: 'text',
+      show: (settings) => settings.customCSS.enable,
+    },
+    {
+      id: 'customCSS.css',
+      label: L.setting.customCSS.css.label(),
+      type: 'dropdown',
+      options: [
+        { value: '', text: L.setting.customCSS.css.default() },
+        ...cssFiles.map(file => ({ value: file.path, text: file.name }))
+      ],
+      show: (settings) => settings.customCSS.enable,
     },
   ];
 };

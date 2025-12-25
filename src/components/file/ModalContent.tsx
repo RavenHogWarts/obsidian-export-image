@@ -1,6 +1,6 @@
 import { type App, type FrontMatterCache, Notice, Platform } from 'obsidian';
 import React, {
-  useState, useRef, type FC, useEffect, useCallback,
+  useState, useRef, type FC, useEffect, useCallback, useMemo,
 } from 'react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { isCopiable } from 'src/imageFormatTester';
@@ -8,176 +8,9 @@ import { copy, save, saveAll } from '../../utils/capture';
 import L from '../../L';
 import Target, { type TargetRef } from '../common/Target';
 import FormItems from '../common/form/FormItems';
+import { type CSSFileInfo, getCSSFiles, readCSSFile } from '../../utils/cssLoader';
 
-const formSchema: FormSchema<ISettings> = [
-  {
-    label: L.includingFilename(),
-    path: 'showFilename',
-    type: 'boolean',
-  },
-  {
-    label: L.imageWidth(),
-    path: 'width',
-    type: 'number',
-  },
-  {
-    path: 'padding.top',
-    label: L.setting.padding.top(),
-    desc: L.setting.padding.description(),
-    type: 'number',
-  },
-  {
-    path: 'padding.right',
-    label: L.setting.padding.right(),
-    type: 'number',
-  },
-  {
-    path: 'padding.bottom',
-    label: L.setting.padding.bottom(),
-    type: 'number',
-  },
-  {
-    path: 'padding.left',
-    label: L.setting.padding.left(),
-    type: 'number',
-  },
-  {
-    path: 'split.mode',
-    label: L.setting.split.mode.label(),
-    desc: L.setting.split.mode.description(),
-    type: 'select',
-    options: [
-      { text: L.setting.split.mode.none(), value: 'none' },
-      { text: L.setting.split.mode.fixed(), value: 'fixed' },
-      { text: L.setting.split.mode.hr(), value: 'hr' },
-      { text: L.setting.split.mode.auto(), value: 'auto' },
-    ],
-  },
-  {
-    path: 'resolutionMode',
-    label: L.setting.resolutionMode.label(),
-    desc: L.setting.resolutionMode.description(),
-    type: 'select',
-    options: [
-      { text: "1x", value: '1x' },
-      { text: "2x", value: '2x' },
-      { text: "3x", value: '3x' },
-      { text: "4x", value: '4x' },
-    ],
-  },
-  {
-    path: 'split.height',
-    desc: L.setting.split.height.description(),
-    label: L.setting.split.height.label(),
-    type: 'number',
-    when: (settings) => settings.split.mode !== 'none' && settings.split.mode !== 'hr',
-  },
-  {
-    path: 'split.overlap',
-    desc: L.setting.split.overlap.description(),
-    label: L.setting.split.overlap.label(),
-    type: 'number',
-    when: (settings) => settings.split.mode === 'fixed',
-  },
-  {
-    label: L.setting.userInfo.show(),
-    path: 'authorInfo.show',
-    type: 'boolean',
-  },
-  {
-    label: L.setting.userInfo.name(),
-    path: 'authorInfo.name',
-    type: 'string',
-    when: { flag: true, path: 'authorInfo.show' },
-  },
-  {
-    label: L.setting.userInfo.remark(),
-    path: 'authorInfo.remark',
-    type: 'string',
-    when: { flag: true, path: 'authorInfo.show' },
-  },
-  {
-    label: L.setting.userInfo.avatar.title(),
-    desc: L.setting.userInfo.avatar.description(),
-    path: 'authorInfo.avatar',
-    type: 'file',
-    when: { flag: true, path: 'authorInfo.show' },
-  },
-  {
-    label: L.setting.userInfo.align(),
-    path: 'authorInfo.align',
-    type: 'select',
-    options: [
-      { text: 'Left', value: 'left' },
-      { text: 'Center', value: 'center' },
-      { text: 'Right', value: 'right' },
-    ],
-    when: { flag: true, path: 'authorInfo.show' },
-  },
-  {
-    label: L.setting.userInfo.position(),
-    path: 'authorInfo.position',
-    type: 'select',
-    options: [
-      { text: 'Top', value: 'top' },
-      { text: 'Bottom', value: 'bottom' },
-    ],
-    when: { flag: true, path: 'authorInfo.show' },
-  },
-  {
-    label: L.setting.watermark.enable.label(),
-    path: 'watermark.enable',
-    type: 'boolean',
-  },
-  {
-    label: L.setting.watermark.type.label(),
-    path: 'watermark.type',
-    type: 'select',
-    options: [
-      { text: L.setting.watermark.type.text(), value: 'text' },
-      { text: L.setting.watermark.type.image(), value: 'image' },
-    ],
-    when: { flag: true, path: 'watermark.enable' },
-  },
-  {
-    label: L.setting.watermark.text.content(),
-    path: 'watermark.text.content',
-    type: 'string',
-    when: settings =>
-      settings.watermark.enable && settings.watermark.type === 'text',
-  },
-  {
-    label: L.setting.watermark.image.src.label(),
-    path: 'watermark.image.src',
-    type: 'file',
-    when: settings =>
-      settings.watermark.enable && settings.watermark.type === 'image',
-  },
-  {
-    label: L.setting.watermark.opacity(),
-    path: 'watermark.opacity',
-    type: 'number',
-    when: { flag: true, path: 'watermark.enable' },
-  },
-  {
-    label: L.setting.watermark.rotate(),
-    path: 'watermark.rotate',
-    type: 'number',
-    when: { flag: true, path: 'watermark.enable' },
-  },
-  {
-    label: L.setting.watermark.width(),
-    path: 'watermark.width',
-    type: 'number',
-    when: { flag: true, path: 'watermark.enable' },
-  },
-  {
-    label: L.setting.watermark.height(),
-    path: 'watermark.height',
-    type: 'number',
-    when: { flag: true, path: 'watermark.enable' },
-  },
-];
+
 
 const ModalContent: FC<{
   markdownEl: Node;
@@ -206,14 +39,14 @@ const ModalContent: FC<{
         setIsLoading(false);
       }, 100);
     }
-    
+
     // 监听内容加载完成事件
     const handleContentLoaded = () => {
       setIsLoading(false);
     };
-    
+
     window.document.addEventListener("export-image-content-loaded", handleContentLoaded);
-    
+
     return () => {
       window.document.removeEventListener("export-image-content-loaded", handleContentLoaded);
     };
@@ -224,6 +57,196 @@ const ModalContent: FC<{
   const [rootHeight, setRootHeight] = useState(0);
   const [pages, setPages] = useState(1);
   const [scale, setScale] = useState(1);
+
+  // CSS 选择相关状态
+  const [cssFiles, setCssFiles] = useState<CSSFileInfo[]>([]);
+  const [customCSSContent, setCustomCSSContent] = useState<string>('');
+
+  const formSchema = useMemo<FormSchema<ISettings>>(() => [
+    {
+      label: L.includingFilename(),
+      path: 'showFilename',
+      type: 'boolean',
+    },
+    {
+      label: L.imageWidth(),
+      path: 'width',
+      type: 'number',
+    },
+    {
+      path: 'padding.top',
+      label: L.setting.padding.top(),
+      desc: L.setting.padding.description(),
+      type: 'number',
+    },
+    {
+      path: 'padding.right',
+      label: L.setting.padding.right(),
+      type: 'number',
+    },
+    {
+      path: 'padding.bottom',
+      label: L.setting.padding.bottom(),
+      type: 'number',
+    },
+    {
+      path: 'padding.left',
+      label: L.setting.padding.left(),
+      type: 'number',
+    },
+    {
+      path: 'split.mode',
+      label: L.setting.split.mode.label(),
+      desc: L.setting.split.mode.description(),
+      type: 'select',
+      options: [
+        { text: L.setting.split.mode.none(), value: 'none' },
+        { text: L.setting.split.mode.fixed(), value: 'fixed' },
+        { text: L.setting.split.mode.hr(), value: 'hr' },
+        { text: L.setting.split.mode.auto(), value: 'auto' },
+      ],
+    },
+    {
+      path: 'resolutionMode',
+      label: L.setting.resolutionMode.label(),
+      desc: L.setting.resolutionMode.description(),
+      type: 'select',
+      options: [
+        { text: "1x", value: '1x' },
+        { text: "2x", value: '2x' },
+        { text: "3x", value: '3x' },
+        { text: "4x", value: '4x' },
+      ],
+    },
+    {
+      path: 'split.height',
+      desc: L.setting.split.height.description(),
+      label: L.setting.split.height.label(),
+      type: 'number',
+      when: (settings) => settings.split.mode !== 'none' && settings.split.mode !== 'hr',
+    },
+    {
+      path: 'split.overlap',
+      desc: L.setting.split.overlap.description(),
+      label: L.setting.split.overlap.label(),
+      type: 'number',
+      when: (settings) => settings.split.mode === 'fixed',
+    },
+    {
+      label: L.setting.userInfo.show(),
+      path: 'authorInfo.show',
+      type: 'boolean',
+    },
+    {
+      label: L.setting.userInfo.name(),
+      path: 'authorInfo.name',
+      type: 'string',
+      when: { flag: true, path: 'authorInfo.show' },
+    },
+    {
+      label: L.setting.userInfo.remark(),
+      path: 'authorInfo.remark',
+      type: 'string',
+      when: { flag: true, path: 'authorInfo.show' },
+    },
+    {
+      label: L.setting.userInfo.avatar.title(),
+      desc: L.setting.userInfo.avatar.description(),
+      path: 'authorInfo.avatar',
+      type: 'file',
+      when: { flag: true, path: 'authorInfo.show' },
+    },
+    {
+      label: L.setting.userInfo.align(),
+      path: 'authorInfo.align',
+      type: 'select',
+      options: [
+        { text: 'Left', value: 'left' },
+        { text: 'Center', value: 'center' },
+        { text: 'Right', value: 'right' },
+      ],
+      when: { flag: true, path: 'authorInfo.show' },
+    },
+    {
+      label: L.setting.userInfo.position(),
+      path: 'authorInfo.position',
+      type: 'select',
+      options: [
+        { text: 'Top', value: 'top' },
+        { text: 'Bottom', value: 'bottom' },
+      ],
+      when: { flag: true, path: 'authorInfo.show' },
+    },
+    {
+      label: L.setting.watermark.enable.label(),
+      path: 'watermark.enable',
+      type: 'boolean',
+    },
+    {
+      label: L.setting.watermark.type.label(),
+      path: 'watermark.type',
+      type: 'select',
+      options: [
+        { text: L.setting.watermark.type.text(), value: 'text' },
+        { text: L.setting.watermark.type.image(), value: 'image' },
+      ],
+      when: { flag: true, path: 'watermark.enable' },
+    },
+    {
+      label: L.setting.watermark.text.content(),
+      path: 'watermark.text.content',
+      type: 'string',
+      when: (settings) =>
+        settings.watermark.enable && settings.watermark.type === 'text',
+    },
+    {
+      label: L.setting.watermark.image.src.label(),
+      path: 'watermark.image.src',
+      type: 'file',
+      when: (settings) =>
+        settings.watermark.enable && settings.watermark.type === 'image',
+    },
+    {
+      label: L.setting.watermark.opacity(),
+      path: 'watermark.opacity',
+      type: 'number',
+      when: { flag: true, path: 'watermark.enable' },
+    },
+    {
+      label: L.setting.watermark.rotate(),
+      path: 'watermark.rotate',
+      type: 'number',
+      when: { flag: true, path: 'watermark.enable' },
+    },
+    {
+      label: L.setting.watermark.width(),
+      path: 'watermark.width',
+      type: 'number',
+      when: { flag: true, path: 'watermark.enable' },
+    },
+    {
+      label: L.setting.watermark.height(),
+      path: 'watermark.height',
+      type: 'number',
+      when: { flag: true, path: 'watermark.enable' },
+    },
+    {
+      label: L.setting.customCSS.enable.label(),
+      desc: L.setting.customCSS.enable.description(),
+      path: 'customCSS.enable',
+      type: 'boolean',
+    },
+    {
+      label: L.setting.customCSS.css.label(),
+      path: 'customCSS.css',
+      type: 'select',
+      options: [
+        { value: '', text: L.setting.customCSS.css.default() },
+        ...cssFiles.map(file => ({ value: file.path, text: file.name }))
+      ],
+      when: { flag: true, path: 'customCSS.enable' },
+    },
+  ], [cssFiles]);
 
   // 添加日志检查函数
   useEffect(() => {
@@ -278,6 +301,29 @@ const ModalContent: FC<{
       setAllowCopy(Boolean(result));
     });
   }, [formData.format]);
+
+  // 加载 CSS 文件列表
+  useEffect(() => {
+    if (formData.customCSS?.src) {
+      getCSSFiles(app, formData.customCSS.src).then(files => {
+        setCssFiles(files);
+      }).catch(console.error);
+    } else {
+      setCssFiles([]);
+    }
+  }, [app, formData.customCSS?.src]);
+
+  // 读取选中的 CSS 文件内容
+  useEffect(() => {
+    const cssPath = formData.customCSS?.css;
+    if (cssPath) {
+      readCSSFile(app, cssPath).then(content => {
+        setCustomCSSContent(content);
+      }).catch(console.error);
+    } else {
+      setCustomCSSContent('');
+    }
+  }, [app, formData.customCSS?.css]);
 
   const handleSave = useCallback(async () => {
     if ((formData.width || 640) <= 20) {
@@ -359,6 +405,7 @@ const ModalContent: FC<{
           {formData.split.mode === 'hr' && <div className='info-text'>
             {L.splitInfoHr({ rootHeight, pages })}
           </div>}
+
           <div className='info-text'>{L.moreSetting()}</div>
         </div>
         <div className='export-image-preview-right'>
@@ -416,6 +463,7 @@ const ModalContent: FC<{
                     scale={scale}
                     isProcessing={processing}
                     onSplitChange={handleSplitChange}
+                    customCSS={customCSSContent}
                   ></Target>
                 </TransformComponent>
               </TransformWrapper>
