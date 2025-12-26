@@ -1,14 +1,23 @@
-import { type App, type FrontMatterCache, Notice, Platform } from 'obsidian';
-import React, {
-  useState, useRef, type FC, useEffect, useCallback, useMemo,
-} from 'react';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import { isCopiable } from 'src/imageFormatTester';
-import { copy, save, saveAll } from '../../utils/capture';
-import L from '../../i18n/L';
-import Target, { type TargetRef } from '../common/Target';
-import FormItems from '../common/form/FormItems';
-import { type CSSFileInfo, getCSSFiles, readCSSFile } from '../../utils/cssLoader';
+import { Notice, Platform, type App, type FrontMatterCache } from "obsidian";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FC,
+} from "react";
+import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
+import { isCopiable } from "src/imageFormatTester";
+import L from "../../i18n/L";
+import { copy, save, saveAll } from "../../utils/capture";
+import {
+  getCSSFiles,
+  readCSSFile,
+  type CSSFileInfo,
+} from "../../utils/cssLoader";
+import Target, { type TargetRef } from "../common/Target";
+import FormItems from "../common/form/FormItems";
 
 const ModalContent: FC<{
   markdownEl: Node;
@@ -22,7 +31,7 @@ const ModalContent: FC<{
   const [isGrabbing, setIsGrabbing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const previewOutRef = useRef<HTMLDivElement>(null);
-  const mainHeight = Math.min(764, (window.innerHeight * 0.85) - 225);
+  const mainHeight = Math.min(764, window.innerHeight * 0.85 - 225);
   const root = useRef<TargetRef>(null);
 
   useEffect(() => {
@@ -31,7 +40,12 @@ const ModalContent: FC<{
 
   useEffect(() => {
     // 当markdownEl准备好时，更新loading状态
-    if (markdownEl && markdownEl instanceof HTMLElement && markdownEl.innerHTML && markdownEl.innerHTML.length > 0) {
+    if (
+      markdownEl &&
+      markdownEl instanceof HTMLElement &&
+      markdownEl.innerHTML &&
+      markdownEl.innerHTML.length > 0
+    ) {
       // 给一个小延迟确保内容完全加载
       setTimeout(() => {
         setIsLoading(false);
@@ -43,10 +57,16 @@ const ModalContent: FC<{
       setIsLoading(false);
     };
 
-    window.document.addEventListener("export-image-content-loaded", handleContentLoaded);
+    window.document.addEventListener(
+      "export-image-content-loaded",
+      handleContentLoaded
+    );
 
     return () => {
-      window.document.removeEventListener("export-image-content-loaded", handleContentLoaded);
+      window.document.removeEventListener(
+        "export-image-content-loaded",
+        handleContentLoaded
+      );
     };
   }, [markdownEl]);
 
@@ -58,193 +78,197 @@ const ModalContent: FC<{
 
   // CSS 选择相关状态
   const [cssFiles, setCssFiles] = useState<CSSFileInfo[]>([]);
-  const [customCSSContent, setCustomCSSContent] = useState<string>('');
+  const [customCSSContent, setCustomCSSContent] = useState<string>("");
 
-  const formSchema = useMemo<FormSchema<ISettings>>(() => [
-    {
-      label: L.includingFilename(),
-      path: 'showFilename',
-      type: 'boolean',
-    },
-    {
-      label: L.imageWidth(),
-      path: 'width',
-      type: 'number',
-    },
-    {
-      path: 'padding.top',
-      label: L.setting.padding.top(),
-      desc: L.setting.padding.description(),
-      type: 'number',
-    },
-    {
-      path: 'padding.right',
-      label: L.setting.padding.right(),
-      type: 'number',
-    },
-    {
-      path: 'padding.bottom',
-      label: L.setting.padding.bottom(),
-      type: 'number',
-    },
-    {
-      path: 'padding.left',
-      label: L.setting.padding.left(),
-      type: 'number',
-    },
-    {
-      path: 'split.mode',
-      label: L.setting.split.mode.label(),
-      desc: L.setting.split.mode.description(),
-      type: 'select',
-      options: [
-        { text: L.setting.split.mode.none(), value: 'none' },
-        { text: L.setting.split.mode.fixed(), value: 'fixed' },
-        { text: L.setting.split.mode.hr(), value: 'hr' },
-        { text: L.setting.split.mode.auto(), value: 'auto' },
-      ],
-    },
-    {
-      path: 'resolutionMode',
-      label: L.setting.resolutionMode.label(),
-      desc: L.setting.resolutionMode.description(),
-      type: 'select',
-      options: [
-        { text: "1x", value: '1x' },
-        { text: "2x", value: '2x' },
-        { text: "3x", value: '3x' },
-        { text: "4x", value: '4x' },
-      ],
-    },
-    {
-      path: 'split.height',
-      desc: L.setting.split.height.description(),
-      label: L.setting.split.height.label(),
-      type: 'number',
-      when: (settings) => settings.split.mode !== 'none' && settings.split.mode !== 'hr',
-    },
-    {
-      path: 'split.overlap',
-      desc: L.setting.split.overlap.description(),
-      label: L.setting.split.overlap.label(),
-      type: 'number',
-      when: (settings) => settings.split.mode === 'fixed',
-    },
-    {
-      label: L.setting.userInfo.show(),
-      path: 'authorInfo.show',
-      type: 'boolean',
-    },
-    {
-      label: L.setting.userInfo.name(),
-      path: 'authorInfo.name',
-      type: 'string',
-      when: { flag: true, path: 'authorInfo.show' },
-    },
-    {
-      label: L.setting.userInfo.remark(),
-      path: 'authorInfo.remark',
-      type: 'string',
-      when: { flag: true, path: 'authorInfo.show' },
-    },
-    {
-      label: L.setting.userInfo.avatar.title(),
-      desc: L.setting.userInfo.avatar.description(),
-      path: 'authorInfo.avatar',
-      type: 'file',
-      when: { flag: true, path: 'authorInfo.show' },
-    },
-    {
-      label: L.setting.userInfo.align(),
-      path: 'authorInfo.align',
-      type: 'select',
-      options: [
-        { text: 'Left', value: 'left' },
-        { text: 'Center', value: 'center' },
-        { text: 'Right', value: 'right' },
-      ],
-      when: { flag: true, path: 'authorInfo.show' },
-    },
-    {
-      label: L.setting.userInfo.position(),
-      path: 'authorInfo.position',
-      type: 'select',
-      options: [
-        { text: 'Top', value: 'top' },
-        { text: 'Bottom', value: 'bottom' },
-      ],
-      when: { flag: true, path: 'authorInfo.show' },
-    },
-    {
-      label: L.setting.watermark.enable.label(),
-      path: 'watermark.enable',
-      type: 'boolean',
-    },
-    {
-      label: L.setting.watermark.type.label(),
-      path: 'watermark.type',
-      type: 'select',
-      options: [
-        { text: L.setting.watermark.type.text(), value: 'text' },
-        { text: L.setting.watermark.type.image(), value: 'image' },
-      ],
-      when: { flag: true, path: 'watermark.enable' },
-    },
-    {
-      label: L.setting.watermark.text.content(),
-      path: 'watermark.text.content',
-      type: 'string',
-      when: (settings) =>
-        settings.watermark.enable && settings.watermark.type === 'text',
-    },
-    {
-      label: L.setting.watermark.image.src.label(),
-      path: 'watermark.image.src',
-      type: 'file',
-      when: (settings) =>
-        settings.watermark.enable && settings.watermark.type === 'image',
-    },
-    {
-      label: L.setting.watermark.opacity(),
-      path: 'watermark.opacity',
-      type: 'number',
-      when: { flag: true, path: 'watermark.enable' },
-    },
-    {
-      label: L.setting.watermark.rotate(),
-      path: 'watermark.rotate',
-      type: 'number',
-      when: { flag: true, path: 'watermark.enable' },
-    },
-    {
-      label: L.setting.watermark.width(),
-      path: 'watermark.width',
-      type: 'number',
-      when: { flag: true, path: 'watermark.enable' },
-    },
-    {
-      label: L.setting.watermark.height(),
-      path: 'watermark.height',
-      type: 'number',
-      when: { flag: true, path: 'watermark.enable' },
-    },
-    {
-      label: L.setting.customCSS.enable.label(),
-      desc: L.setting.customCSS.enable.description(),
-      path: 'customCSS.enable',
-      type: 'boolean',
-    },
-    {
-      label: L.setting.customCSS.css.label(),
-      path: 'customCSS.css',
-      type: 'select',
-      options: [
-        { value: '', text: L.setting.customCSS.css.default() },
-        ...cssFiles.map(file => ({ value: file.path, text: file.name }))
-      ],
-      when: { flag: true, path: 'customCSS.enable' },
-    },
-  ], [cssFiles]);
+  const formSchema = useMemo<FormSchema<ISettings>>(
+    () => [
+      {
+        label: L.includingFilename(),
+        path: "showFilename",
+        type: "boolean",
+      },
+      {
+        label: L.imageWidth(),
+        path: "width",
+        type: "number",
+      },
+      {
+        path: "padding.top",
+        label: L.setting.padding.top(),
+        desc: L.setting.padding.description(),
+        type: "number",
+      },
+      {
+        path: "padding.right",
+        label: L.setting.padding.right(),
+        type: "number",
+      },
+      {
+        path: "padding.bottom",
+        label: L.setting.padding.bottom(),
+        type: "number",
+      },
+      {
+        path: "padding.left",
+        label: L.setting.padding.left(),
+        type: "number",
+      },
+      {
+        path: "split.mode",
+        label: L.setting.split.mode.label(),
+        desc: L.setting.split.mode.description(),
+        type: "select",
+        options: [
+          { text: L.setting.split.mode.none(), value: "none" },
+          { text: L.setting.split.mode.fixed(), value: "fixed" },
+          { text: L.setting.split.mode.hr(), value: "hr" },
+          { text: L.setting.split.mode.auto(), value: "auto" },
+        ],
+      },
+      {
+        path: "resolutionMode",
+        label: L.setting.resolutionMode.label(),
+        desc: L.setting.resolutionMode.description(),
+        type: "select",
+        options: [
+          { text: "1x", value: "1x" },
+          { text: "2x", value: "2x" },
+          { text: "3x", value: "3x" },
+          { text: "4x", value: "4x" },
+        ],
+      },
+      {
+        path: "split.height",
+        desc: L.setting.split.height.description(),
+        label: L.setting.split.height.label(),
+        type: "number",
+        when: (settings) =>
+          settings.split.mode !== "none" && settings.split.mode !== "hr",
+      },
+      {
+        path: "split.overlap",
+        desc: L.setting.split.overlap.description(),
+        label: L.setting.split.overlap.label(),
+        type: "number",
+        when: (settings) => settings.split.mode === "fixed",
+      },
+      {
+        label: L.setting.userInfo.show(),
+        path: "authorInfo.show",
+        type: "boolean",
+      },
+      {
+        label: L.setting.userInfo.name(),
+        path: "authorInfo.name",
+        type: "string",
+        when: { flag: true, path: "authorInfo.show" },
+      },
+      {
+        label: L.setting.userInfo.remark(),
+        path: "authorInfo.remark",
+        type: "string",
+        when: { flag: true, path: "authorInfo.show" },
+      },
+      {
+        label: L.setting.userInfo.avatar.title(),
+        desc: L.setting.userInfo.avatar.description(),
+        path: "authorInfo.avatar",
+        type: "file",
+        when: { flag: true, path: "authorInfo.show" },
+      },
+      {
+        label: L.setting.userInfo.align(),
+        path: "authorInfo.align",
+        type: "select",
+        options: [
+          { text: "Left", value: "left" },
+          { text: "Center", value: "center" },
+          { text: "Right", value: "right" },
+        ],
+        when: { flag: true, path: "authorInfo.show" },
+      },
+      {
+        label: L.setting.userInfo.position(),
+        path: "authorInfo.position",
+        type: "select",
+        options: [
+          { text: "Top", value: "top" },
+          { text: "Bottom", value: "bottom" },
+        ],
+        when: { flag: true, path: "authorInfo.show" },
+      },
+      {
+        label: L.setting.watermark.enable.label(),
+        path: "watermark.enable",
+        type: "boolean",
+      },
+      {
+        label: L.setting.watermark.type.label(),
+        path: "watermark.type",
+        type: "select",
+        options: [
+          { text: L.setting.watermark.type.text(), value: "text" },
+          { text: L.setting.watermark.type.image(), value: "image" },
+        ],
+        when: { flag: true, path: "watermark.enable" },
+      },
+      {
+        label: L.setting.watermark.text.content(),
+        path: "watermark.text.content",
+        type: "string",
+        when: (settings) =>
+          settings.watermark.enable && settings.watermark.type === "text",
+      },
+      {
+        label: L.setting.watermark.image.src.label(),
+        path: "watermark.image.src",
+        type: "file",
+        when: (settings) =>
+          settings.watermark.enable && settings.watermark.type === "image",
+      },
+      {
+        label: L.setting.watermark.opacity(),
+        path: "watermark.opacity",
+        type: "number",
+        when: { flag: true, path: "watermark.enable" },
+      },
+      {
+        label: L.setting.watermark.rotate(),
+        path: "watermark.rotate",
+        type: "number",
+        when: { flag: true, path: "watermark.enable" },
+      },
+      {
+        label: L.setting.watermark.width(),
+        path: "watermark.width",
+        type: "number",
+        when: { flag: true, path: "watermark.enable" },
+      },
+      {
+        label: L.setting.watermark.height(),
+        path: "watermark.height",
+        type: "number",
+        when: { flag: true, path: "watermark.enable" },
+      },
+      {
+        label: L.setting.customCSS.enable.label(),
+        desc: L.setting.customCSS.enable.description(),
+        path: "customCSS.enable",
+        type: "boolean",
+      },
+      {
+        label: L.setting.customCSS.css.label(),
+        path: "customCSS.css",
+        type: "select",
+        options: [
+          { value: "", text: L.setting.customCSS.css.default() },
+          ...cssFiles.map((file) => ({ value: file.path, text: file.name })),
+        ],
+        when: { flag: true, path: "customCSS.enable" },
+      },
+    ],
+    [cssFiles]
+  );
 
   const calculateScale = useCallback(() => {
     if (!root.current?.element || !previewOutRef.current) return 1;
@@ -252,11 +276,13 @@ const ModalContent: FC<{
     const contentWidth = root.current.element.clientWidth;
     const previewWidth = previewOutRef.current.clientWidth;
 
-    return Math.min(
-      1,
-      mainHeight / (contentHeight || 100),
-      previewWidth / ((contentWidth || 0) + 2),
-    ) / 2;
+    return (
+      Math.min(
+        1,
+        mainHeight / (contentHeight || 100),
+        previewWidth / ((contentWidth || 0) + 2)
+      ) / 2
+    );
   }, [mainHeight]);
 
   useEffect(() => {
@@ -282,23 +308,25 @@ const ModalContent: FC<{
   }, []);
 
   useEffect(() => {
-    if (formData.split.mode === 'none') {
+    if (formData.split.mode === "none") {
       setPages(1);
     }
   }, [formData.split.mode]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    isCopiable(formData.format).then(result => {
+    isCopiable(formData.format).then((result) => {
       setAllowCopy(Boolean(result));
     });
   }, [formData.format]);
 
   useEffect(() => {
     if (formData.customCSS?.src) {
-      getCSSFiles(app, formData.customCSS.src).then(files => {
-        setCssFiles(files);
-      }).catch(console.error);
+      getCSSFiles(app, formData.customCSS.src)
+        .then((files) => {
+          setCssFiles(files);
+        })
+        .catch(console.error);
     } else {
       setCssFiles([]);
     }
@@ -310,11 +338,13 @@ const ModalContent: FC<{
     // 读取 CSS 文件内容的辅助函数
     const loadCSSContent = () => {
       if (cssPath) {
-        readCSSFile(app, cssPath).then(content => {
-          setCustomCSSContent(content);
-        }).catch(console.error);
+        readCSSFile(app, cssPath)
+          .then((content) => {
+            setCustomCSSContent(content);
+          })
+          .catch(console.error);
       } else {
-        setCustomCSSContent('');
+        setCustomCSSContent("");
       }
     };
 
@@ -329,7 +359,7 @@ const ModalContent: FC<{
     };
 
     // 注册事件监听
-    const eventRef = app.vault.on('modify', handleFileModify);
+    const eventRef = app.vault.on("modify", handleFileModify);
 
     // 清理函数：取消事件监听
     return () => {
@@ -352,7 +382,7 @@ const ModalContent: FC<{
         title,
         formData.resolutionMode,
         formData.format,
-        Platform.isMobile,
+        Platform.isMobile
       );
     } catch {
       new Notice(L.saveFail());
@@ -368,7 +398,11 @@ const ModalContent: FC<{
 
     setProcessing(true);
     try {
-      await copy(root.current.contentElement, formData.resolutionMode, formData.format);
+      await copy(
+        root.current.contentElement,
+        formData.resolutionMode,
+        formData.format
+      );
     } catch {
       new Notice(L.copyFail());
     }
@@ -393,40 +427,55 @@ const ModalContent: FC<{
         formData.split.overlap,
         formData.split.mode,
         app,
-        title,
+        title
       );
     } catch {
       new Notice(L.copyFail());
     }
     setProcessing(false);
-  }, [root, formData.format, formData.resolutionMode, formData.split, app, title]);
+  }, [
+    root,
+    formData.format,
+    formData.resolutionMode,
+    formData.split,
+    app,
+    title,
+  ]);
 
   return (
-    <div className='export-image-preview-root'>
-      <div className='export-image-preview-main'>
-        <div className='export-image-preview-left'>
+    <div className="export-image-preview-root">
+      <div className="export-image-preview-main">
+        <div className="export-image-preview-left">
           <FormItems
             formSchema={formSchema}
             update={setFormData}
             settings={formData}
             app={app}
           />
-          {formData.split.mode !== 'none' && formData.split.mode !== 'hr' && <div className='info-text'>
-            {L.splitInfo({ rootHeight, splitHeight: formData.split.height, pages })}
-          </div>}
-          {formData.split.mode === 'hr' && <div className='info-text'>
-            {L.splitInfoHr({ rootHeight, pages })}
-          </div>}
+          {formData.split.mode !== "none" && formData.split.mode !== "hr" && (
+            <div className="info-text">
+              {L.splitInfo({
+                rootHeight,
+                splitHeight: formData.split.height,
+                pages,
+              })}
+            </div>
+          )}
+          {formData.split.mode === "hr" && (
+            <div className="info-text">
+              {L.splitInfoHr({ rootHeight, pages })}
+            </div>
+          )}
 
-          <div className='info-text'>{L.moreSetting()}</div>
+          <div className="info-text">{L.moreSetting()}</div>
         </div>
-        <div className='export-image-preview-right'>
+        <div className="export-image-preview-right">
           <div
-            className='export-image-preview-out'
+            className="export-image-preview-out"
             ref={previewOutRef}
             style={{
               height: mainHeight,
-              cursor: isGrabbing ? 'grabbing' : 'grab',
+              cursor: isGrabbing ? "grabbing" : "grab",
             }}
           >
             {isLoading ? (
@@ -439,7 +488,7 @@ const ModalContent: FC<{
                 minScale={calculateScale()}
                 maxScale={4}
                 pinch={{ step: 20 }}
-                doubleClick={{ mode: 'reset' }}
+                doubleClick={{ mode: "reset" }}
                 centerZoomedOut={false}
                 onPanning={() => {
                   setIsGrabbing(true);
@@ -454,14 +503,14 @@ const ModalContent: FC<{
               >
                 <TransformComponent
                   wrapperStyle={{
-                    width: '100%',
+                    width: "100%",
                     height: mainHeight,
                   }}
                   contentStyle={{
-                    border: '1px var(--divider-color) solid',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    boxShadow: '0 0 10px 10px rgba(0,0,0,0.15)',
+                    border: "1px var(--divider-color) solid",
+                    borderRadius: "8px",
+                    overflow: "hidden",
+                    boxShadow: "0 0 10px 10px rgba(0,0,0,0.15)",
                   }}
                 >
                   <Target
@@ -481,20 +530,32 @@ const ModalContent: FC<{
               </TransformWrapper>
             )}
           </div>
-          <div className='info-text'>{L.guide()}</div>
+          <div className="info-text">{L.guide()}</div>
         </div>
       </div>
-      <div className='export-image-preview-actions'>
+      <div className="export-image-preview-actions">
         {pages === 1 && (
           <div>
-            <button onClick={handleCopy} disabled={processing || !allowCopy || isLoading}>
+            <button
+              onClick={handleCopy}
+              disabled={processing || !allowCopy || isLoading}
+            >
               {L.copy()}
             </button>
-            {allowCopy || <p>{L.notAllowCopy({ format: formData.format.replace(/\d$/, '').toUpperCase() })}</p>}
+            {allowCopy || (
+              <p>
+                {L.notAllowCopy({
+                  format: formData.format.replace(/\d$/, "").toUpperCase(),
+                })}
+              </p>
+            )}
           </div>
         )}
 
-        <button onClick={() => pages === 1 ? handleSave() : handleSaveAll()} disabled={processing || isLoading}>
+        <button
+          onClick={() => (pages === 1 ? handleSave() : handleSaveAll())}
+          disabled={processing || isLoading}
+        >
           {Platform.isMobile ? L.saveVault() : L.save()}
         </button>
       </div>

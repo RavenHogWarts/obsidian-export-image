@@ -1,16 +1,14 @@
-import get from 'lodash/get';
-import React, {
-  type FC,
-} from 'react';
-import { type App } from 'obsidian';
-import Control from './Control';
+import get from "lodash/get";
+import { type App } from "obsidian";
+import { type FC } from "react";
+import Control from "./Control";
 
 function isShow(field: FieldSchema<ISettings>, settings: ISettings) {
   if (!field.when) {
     return true;
   }
 
-  if (typeof field.when === 'function') {
+  if (typeof field.when === "function") {
     return field.when(settings);
   }
 
@@ -25,21 +23,18 @@ const FormItems: FC<{
 }> = ({ formSchema, settings, update, app }) => (
   <>
     {formSchema.map(
-      fieldSchema =>
+      (fieldSchema) =>
         isShow(fieldSchema, settings) && (
-          <div
-            className='setting-item'
-            key={fieldSchema.path}
-          >
-            <div className='setting-item-info'>
-              <div className='setting-item-name'>{fieldSchema.label}</div>
+          <div className="setting-item" key={fieldSchema.path}>
+            <div className="setting-item-info">
+              <div className="setting-item-name">{fieldSchema.label}</div>
               {fieldSchema.desc && (
-                <div className='setting-item-description'>
+                <div className="setting-item-description">
                   {fieldSchema.desc}
                 </div>
               )}
             </div>
-            <div className='setting-item-control'>
+            <div className="setting-item-control">
               <Control
                 fieldSchema={fieldSchema}
                 setting={settings}
@@ -47,9 +42,8 @@ const FormItems: FC<{
                 app={app}
               ></Control>
             </div>
-
           </div>
-        ),
+        )
     )}
   </>
 );

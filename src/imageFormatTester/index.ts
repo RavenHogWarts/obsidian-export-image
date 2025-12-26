@@ -1,5 +1,5 @@
-import {getMime} from 'src/utils';
-import {jpg, png, webp} from './tiny';
+import { getMime } from "src/utils";
+import { jpg, png, webp } from "./tiny";
 
 async function tester(image: string) {
   try {
@@ -8,7 +8,7 @@ async function tester(image: string) {
     data.push(
       new ClipboardItem({
         [blob.type]: blob,
-      }),
+      })
     );
     await navigator.clipboard.write(data);
     return true;
@@ -30,12 +30,12 @@ export async function isCopiable(type: FileFormat) {
     return copyCache[type];
   }
 
-  if (type === 'jpg') {
+  if (type === "jpg") {
     copyCache[type] = tester(jpg);
     return copyCache[type];
   }
 
-  if (type === 'webp') {
+  if (type === "webp") {
     copyCache[type] = tester(webp);
     return copyCache[type];
   }
@@ -51,14 +51,14 @@ export async function isCreatable(type: FileFormat): Promise<boolean> {
     return createCache[type]!;
   }
 
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = 1;
   canvas.height = 1;
   const mime = getMime(type);
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     try {
       canvas.toBlob(() => {
-        if (type.includes('png')) {
+        if (type.includes("png")) {
           createCache.png0 = true;
           createCache.png1 = true;
         } else {
@@ -68,7 +68,7 @@ export async function isCreatable(type: FileFormat): Promise<boolean> {
         resolve(true);
       }, mime);
     } catch {
-      if (type.includes('png')) {
+      if (type.includes("png")) {
         createCache.png0 = false;
         createCache.png1 = false;
       } else {

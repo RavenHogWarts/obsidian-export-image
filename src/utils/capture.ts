@@ -1,17 +1,26 @@
-import {
-  Notice, Platform, requestUrl, type App, type TFile,
-} from 'obsidian';
-import saveAs from 'file-saver';
-import JsPdf from 'jspdf';
-import JSZip from 'jszip';
-import domtoimage from '../dom-to-image-more';
-import L from '../i18n/L';
-import makeHTML from './makeHTML';
-import { fileToBase64, delay, getMime } from '.';
-import { calculateSplitPositions, getElementMeasures } from './split';
+import saveAs from "file-saver";
+import JsPdf from "jspdf";
+import JSZip from "jszip";
+import { Notice, Platform, requestUrl, type App, type TFile } from "obsidian";
+import { delay, fileToBase64, getMime } from ".";
+import domtoimage from "../dom-to-image-more";
+import L from "../i18n/L";
+import makeHTML from "./makeHTML";
+import { calculateSplitPositions, getElementMeasures } from "./split";
 
-async function getBlob(el: HTMLElement, resolutionMode: ResolutionMode, type: string): Promise<Blob> {
-  const scale = resolutionMode === '2x' ? 2 : resolutionMode === '3x' ? 3 : resolutionMode === '4x' ? 4 : 1;
+async function getBlob(
+  el: HTMLElement,
+  resolutionMode: ResolutionMode,
+  type: string
+): Promise<Blob> {
+  const scale =
+    resolutionMode === "2x"
+      ? 2
+      : resolutionMode === "3x"
+      ? 3
+      : resolutionMode === "4x"
+      ? 4
+      : 1;
   return domtoimage.toBlob(el, {
     width: el.clientWidth,
     height: el.clientHeight,
@@ -25,24 +34,26 @@ async function getBlob(el: HTMLElement, resolutionMode: ResolutionMode, type: st
 async function makePdf(blob: Blob, el: HTMLElement) {
   const dataUrl = await fileToBase64(blob);
   const pdf = new JsPdf({
-    unit: 'in',
+    unit: "in",
     format: [el.clientWidth / 96, el.clientHeight / 96],
-    orientation: el.clientWidth > el.clientHeight ? 'l' : 'p',
+    orientation: el.clientWidth > el.clientHeight ? "l" : "p",
     compress: true,
   });
   pdf.addImage(
     dataUrl,
-    'JPEG',
+    "JPEG",
     0,
     0,
     el.clientWidth / 96,
-    el.clientHeight / 96,
+    el.clientHeight / 96
   );
   return pdf;
 }
 
 async function saveToVault(app: App, blob: Blob, filename: string) {
-  const filePath = await app.fileManager.getAvailablePathForAttachment(filename);
+  const filePath = await app.fileManager.getAvailablePathForAttachment(
+    filename
+  );
   await app.vault.createBinary(filePath, await blob.arrayBuffer());
   return filePath;
 }
@@ -53,22 +64,21 @@ export async function save(
   title: string,
   resolutionMode: ResolutionMode,
   format: FileFormat,
-  isMobile: boolean,
+  isMobile: boolean
 ) {
-  const blob: Blob = await getBlob(
-    el,
-    resolutionMode,
-    getMime(format),
-  );
-  const filename = `${title.replaceAll(/\s+/g, '_')}.${format.replace(/\d$/, '')}`;
+  const blob: Blob = await getBlob(el, resolutionMode, getMime(format));
+  const filename = `${title.replaceAll(/\s+/g, "_")}.${format.replace(
+    /\d$/,
+    ""
+  )}`;
   switch (format) {
-    case 'jpg':
-    case 'webp':
-    case 'png0':
-    case 'png1': {
+    case "jpg":
+    case "webp":
+    case "png0":
+    case "png1": {
       if (isMobile) {
         const filePath = await app.fileManager.getAvailablePathForAttachment(
-          filename,
+          filename
         );
         await app.vault.createBinary(filePath, await blob.arrayBuffer());
         new Notice(L.saveSuccess({ filePath }));
@@ -79,13 +89,13 @@ export async function save(
       break;
     }
 
-    case 'pdf': {
+    case "pdf": {
       const pdf = await makePdf(blob, el);
       if (isMobile) {
         const filePath = await app.fileManager.getAvailablePathForAttachment(
-          filename,
+          filename
         );
-        await app.vault.createBinary(filePath, pdf.output('arraybuffer'));
+        await app.vault.createBinary(filePath, pdf.output("arraybuffer"));
         new Notice(L.saveSuccess({ filePath }));
       } else {
         pdf.save(filename);
@@ -99,23 +109,19 @@ export async function save(
 export async function copy(
   el: HTMLElement,
   resolutionMode: ResolutionMode,
-  format: FileFormat,
+  format: FileFormat
 ) {
-  if (format === 'pdf') {
+  if (format === "pdf") {
     new Notice(L.copyNotAllowed());
     return;
   }
 
-  const blob = await getBlob(
-    el,
-    resolutionMode,
-    getMime(format),
-  );
+  const blob = await getBlob(el, resolutionMode, getMime(format));
   const data: ClipboardItem[] = [];
   data.push(
     new ClipboardItem({
       [blob.type]: blob,
-    }),
+    })
   );
   await navigator.clipboard.write(data);
   new Notice(L.copiedSuccess());
@@ -127,14 +133,14 @@ export async function saveMultipleFiles(
   onProgress: (finished: number) => void,
   app: App,
   folderName: string,
-  containner: HTMLDivElement,
+  containner: HTMLDivElement
 ) {
   let finished = 0;
   const { format, resolutionMode, split } = settings;
   const blobs: { blob: Blob; filename: string }[] = [];
 
   for (const file of files) {
-    const el = await makeHTML(file, settings, app, containner) as HTMLElement;
+    const el = (await makeHTML(file, settings, app, containner)) as HTMLElement;
     await delay(20);
 
     const target = {
@@ -142,13 +148,13 @@ export async function saveMultipleFiles(
       contentElement: el,
       setClip: (startY: number, height: number) => {
         el.style.height = `${height}px`;
-        el.style.overflow = 'hidden';
+        el.style.overflow = "hidden";
         el.style.transform = `translateY(-${startY}px)`;
       },
       resetClip: () => {
-        el.style.height = '';
-        el.style.overflow = '';
-        el.style.transform = '';
+        el.style.height = "";
+        el.style.overflow = "";
+        el.style.transform = "";
       },
     };
 
@@ -160,7 +166,7 @@ export async function saveMultipleFiles(
       split.overlap,
       split.mode,
       app,
-      file.basename,
+      file.basename
     );
 
     finished++;
@@ -169,46 +175,56 @@ export async function saveMultipleFiles(
 }
 
 export async function getRemoteImageUrl(url?: string) {
-  if (!url || !url.startsWith('http')) {
+  if (!url || !url.startsWith("http")) {
     return url;
   }
   try {
     const response = await requestUrl({
       url,
-      method: 'GET',
+      method: "GET",
     });
-    const blob = new Blob([response.arrayBuffer], { type: response.headers['content-type'] || 'application/octet-stream' });
+    const blob = new Blob([response.arrayBuffer], {
+      type: response.headers["content-type"] || "application/octet-stream",
+    });
     const res = URL.createObjectURL(blob);
     return res;
   } catch (error) {
-    console.error('Failed to load image:', error);
+    console.error("Failed to load image:", error);
     return url;
   }
 }
 
 export async function saveAll(
-  target: { element: HTMLElement; contentElement: HTMLElement; setClip: (startY: number, height: number) => void; resetClip: () => void },
+  target: {
+    element: HTMLElement;
+    contentElement: HTMLElement;
+    setClip: (startY: number, height: number) => void;
+    resetClip: () => void;
+  },
   format: FileFormat,
   resolutionMode: ResolutionMode,
   splitHeight: number,
   splitOverlap: number,
   splitMode: SplitMode,
   app: App,
-  title: string,
+  title: string
 ) {
   try {
     // 计算需要分割的页数和位置
     const totalHeight = target.contentElement.clientHeight;
     const elements = getElementMeasures(target.contentElement, splitMode);
 
-    const splitPositions = calculateSplitPositions({
-      mode: splitMode,
-      height: splitHeight,
-      overlap: splitOverlap,
-      totalHeight,
-    }, elements);
+    const splitPositions = calculateSplitPositions(
+      {
+        mode: splitMode,
+        height: splitHeight,
+        overlap: splitOverlap,
+        totalHeight,
+      },
+      elements
+    );
 
-    if (format === 'pdf') {
+    if (format === "pdf") {
       // PDF 格式：创建多页 PDF
       let pdf: JsPdf | undefined;
 
@@ -220,34 +236,48 @@ export async function saveAll(
         const blob = await getBlob(
           target.element,
           resolutionMode,
-          'image/jpeg'
+          "image/jpeg"
         );
         const dataUrl = await fileToBase64(blob);
 
         if (!pdf) {
           pdf = new JsPdf({
-            unit: 'in',
+            unit: "in",
             format: [target.element.clientWidth / 96, height / 96],
-            orientation: target.element.clientWidth > height ? 'l' : 'p',
+            orientation: target.element.clientWidth > height ? "l" : "p",
             compress: true,
           });
         } else {
-          pdf.addPage([target.element.clientWidth / 96, height / 96], target.element.clientWidth > height ? 'l' : 'p');
+          pdf.addPage(
+            [target.element.clientWidth / 96, height / 96],
+            target.element.clientWidth > height ? "l" : "p"
+          );
         }
 
-        pdf.addImage(dataUrl, 'JPEG', 0, 0, target.element.clientWidth / 96, height / 96);
+        pdf.addImage(
+          dataUrl,
+          "JPEG",
+          0,
+          0,
+          target.element.clientWidth / 96,
+          height / 96
+        );
       }
 
-      const filename = `${title.replaceAll(/\s+/g, '_')}.pdf`;
+      const filename = `${title.replaceAll(/\s+/g, "_")}.pdf`;
       if (Platform.isMobile) {
-        const filePath = await saveToVault(app, new Blob([pdf!.output('arraybuffer')]), filename);
+        const filePath = await saveToVault(
+          app,
+          new Blob([pdf!.output("arraybuffer")]),
+          filename
+        );
         new Notice(L.saveSuccess({ filePath }));
       } else {
         pdf?.save(filename);
       }
     } else {
       // 其他图片格式：分别保存每个部分
-      const ext = format.replace(/\d$/, '');
+      const ext = format.replace(/\d$/, "");
       const zip = new JSZip();
       const blobs: { blob: Blob; filename: string }[] = [];
 
@@ -257,8 +287,12 @@ export async function saveAll(
         target.setClip(startY, height);
         await delay(20); // 等待渲染
 
-        const blob = await getBlob(target.element, resolutionMode, getMime(format));
-        const filename = `${title.replaceAll(/\s+/g, '_')}_${i + 1}.${ext}`;
+        const blob = await getBlob(
+          target.element,
+          resolutionMode,
+          getMime(format)
+        );
+        const filename = `${title.replaceAll(/\s+/g, "_")}_${i + 1}.${ext}`;
         blobs.push({ blob, filename });
       }
 
@@ -273,8 +307,8 @@ export async function saveAll(
         for (const { blob, filename } of blobs) {
           zip.file(filename, blob);
         }
-        const zipBlob = await zip.generateAsync({ type: 'blob' });
-        saveAs(zipBlob, `${title.replaceAll(/\s+/g, '_')}.zip`);
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        saveAs(zipBlob, `${title.replaceAll(/\s+/g, "_")}.zip`);
       }
     }
   } finally {

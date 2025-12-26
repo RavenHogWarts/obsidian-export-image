@@ -1,4 +1,4 @@
-declare type FileFormat = 'png0' | 'png1' | 'jpg' | 'pdf' | 'webp';
+declare type FileFormat = "png0" | "png1" | "jpg" | "pdf" | "webp";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 declare type ISettings = {
@@ -20,12 +20,12 @@ declare type ISettings = {
     name?: string;
     remark?: string;
     avatar?: string;
-    align?: 'left' | 'center' | 'right';
-    position?: 'top' | 'bottom';
+    align?: "left" | "center" | "right";
+    position?: "top" | "bottom";
   };
   watermark: {
     enable: boolean;
-    type?: 'text' | 'image';
+    type?: "text" | "image";
     text: {
       content?: string;
       fontSize?: number;
@@ -55,7 +55,7 @@ declare type ISettings = {
 
 type ConditionType<T> = { flag: any; path: string } | ((data: T) => boolean);
 
-type ValueType = 'number' | 'string' | 'boolean' | 'file' | 'color';
+type ValueType = "number" | "string" | "boolean" | "file" | "color";
 
 type BaseFieldSchema<T> = {
   label: string;
@@ -67,7 +67,7 @@ type BaseFieldSchema<T> = {
 type SelectFieldSchema<T> = {
   label: string;
   path: string;
-  type: 'select';
+  type: "select";
   options: Array<{ text: string; value: string }>;
   when?: ConditionType<T>;
   desc?: string;
@@ -76,15 +76,15 @@ declare type FieldSchema<T> = BaseFieldSchema<T> | SelectFieldSchema<T>;
 declare type FormSchema<T> = Array<FieldSchema<T>>;
 
 declare type MetadataType =
-  | 'text'
-  | 'date'
-  | 'datetime'
-  | 'checkbox'
-  | 'multitext'
-  | 'number'
-  | 'tags'
-  | 'aliases';
+  | "text"
+  | "date"
+  | "datetime"
+  | "checkbox"
+  | "multitext"
+  | "number"
+  | "tags"
+  | "aliases";
 
-declare type SplitMode = 'none' | 'fixed' | 'hr' | 'auto';
+declare type SplitMode = "none" | "fixed" | "hr" | "auto";
 
-declare type ResolutionMode = '1x' | '2x' | '3x' | '4x';
+declare type ResolutionMode = "1x" | "2x" | "3x" | "4x";

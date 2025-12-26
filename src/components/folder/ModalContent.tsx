@@ -1,16 +1,10 @@
-import React, {
-  type FC,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { type App, TFile, TFolder } from 'obsidian';
-import L from 'src/i18n/L';
-import { delay, isMarkdownFile } from 'src/utils';
-import { saveMultipleFiles } from 'src/utils/capture';
-import { formatAvailable } from 'src/types/settings';
-import FormItems from '../common/form/FormItems';
+import { TFile, TFolder, type App } from "obsidian";
+import { useCallback, useEffect, useRef, useState, type FC } from "react";
+import L from "src/i18n/L";
+import { formatAvailable } from "src/types/settings";
+import { delay, isMarkdownFile } from "src/utils";
+import { saveMultipleFiles } from "src/utils/capture";
+import FormItems from "../common/form/FormItems";
 
 const ModalContent: FC<{
   settings: ISettings;
@@ -41,7 +35,7 @@ const ModalContent: FC<{
       setFinished,
       app,
       folder.name,
-      hiddenRef.current!,
+      hiddenRef.current!
     );
     setRunning(false);
     await delay(80);
@@ -58,39 +52,39 @@ const ModalContent: FC<{
   const formSchema: FormSchema<ISettings> = [
     {
       label: L.setting.recursive(),
-      path: 'recursive',
-      type: 'boolean',
+      path: "recursive",
+      type: "boolean",
     },
     {
       label: L.includingFilename(),
-      path: 'showFilename',
-      type: 'boolean',
+      path: "showFilename",
+      type: "boolean",
     },
     {
       label: L.imageWidth(),
-      path: 'width',
-      type: 'number',
+      path: "width",
+      type: "number",
     },
     {
       label: L.setting.userInfo.show(),
-      path: 'authorInfo.show',
-      type: 'boolean',
+      path: "authorInfo.show",
+      type: "boolean",
     },
     {
       label: L.setting.watermark.enable.label(),
-      path: 'watermark.enable',
-      type: 'boolean',
+      path: "watermark.enable",
+      type: "boolean",
     },
     {
       label: L.setting.format.title(),
-      path: 'format',
-      type: 'select',
+      path: "format",
+      type: "select",
       options: [
-        { value: 'png0', text: 'png(normal)' },
-        { value: 'png1', text: 'png(no background)' },
-        { value: 'jpg', text: 'jpg' },
-        { value: 'webp', text: 'webp' },
-        { value: 'pdf', text: 'pdf' },
+        { value: "png0", text: "png(normal)" },
+        { value: "png1", text: "png(no background)" },
+        { value: "jpg", text: "jpg" },
+        { value: "webp", text: "webp" },
+        { value: "pdf", text: "pdf" },
       ].filter(({ value }) => formatAvailable.contains(value as FileFormat)),
     },
   ];
@@ -98,7 +92,7 @@ const ModalContent: FC<{
     const fileList: TFile[] = [];
     if (formData.recursive) {
       const recursiveFileList = (folder: TFolder) => {
-        folder.children.forEach(child => {
+        folder.children.forEach((child) => {
           if (child instanceof TFolder) {
             recursiveFileList(child);
           } else if (child instanceof TFile && isMarkdownFile(child)) {
@@ -128,8 +122,8 @@ const ModalContent: FC<{
   }, [fileList, selectFiles]);
 
   useEffect(() => {
-    const newSelectFiles = selectFiles.filter(file =>
-      fileList.includes(file),
+    const newSelectFiles = selectFiles.filter((file) =>
+      fileList.includes(file)
     );
     if (newSelectFiles.length !== selectFiles.length) {
       setSelectFiles(newSelectFiles);
@@ -138,16 +132,16 @@ const ModalContent: FC<{
 
   return (
     <>
-      <div className='export-image-hidden' ref={hiddenRef}></div>
+      <div className="export-image-hidden" ref={hiddenRef}></div>
       <div
-        className='export-image-preview-root'
+        className="export-image-preview-root"
         style={{
-          pointerEvents: running ? 'none' : 'unset',
-          cursor: 'not-allowed',
+          pointerEvents: running ? "none" : "unset",
+          cursor: "not-allowed",
         }}
       >
-        <div className='export-image-preview-main'>
-          <div className='export-image-preview-left'>
+        <div className="export-image-preview-main">
+          <div className="export-image-preview-left">
             <FormItems
               formSchema={formSchema}
               update={setFormData}
@@ -156,39 +150,39 @@ const ModalContent: FC<{
             />
           </div>
           <div
-            className='export-image-preview-right'
-            style={{ maxHeight: 320, overflowY: 'auto' }}
+            className="export-image-preview-right"
+            style={{ maxHeight: 320, overflowY: "auto" }}
           >
             {fileList.length > 0 ? (
               <div>
-                <div className='export-image-preview-file-item export-image-select-all'>
+                <div className="export-image-preview-file-item export-image-select-all">
                   <input
-                    type='checkbox'
+                    type="checkbox"
                     checked={selectFiles.length === fileList.length}
                     onChange={selectAll}
                   />
-                  <span className='export-image-filename'>{L.selectAll()}</span>
-                  <span className='export-image-select-number'>
+                  <span className="export-image-filename">{L.selectAll()}</span>
+                  <span className="export-image-select-number">
                     {selectFiles.length}/{fileList.length}
                   </span>
                 </div>
-                {fileList.map(file => (
+                {fileList.map((file) => (
                   <div
-                    className='export-image-preview-file-item'
+                    className="export-image-preview-file-item"
                     key={file.path}
                   >
                     <input
-                      type='checkbox'
+                      type="checkbox"
                       checked={selectFiles.includes(file)}
-                      onChange={e => {
+                      onChange={(e) => {
                         if (e.target.checked) {
                           setSelectFiles([...selectFiles, file]);
                         } else {
-                          setSelectFiles(selectFiles.filter(f => f !== file));
+                          setSelectFiles(selectFiles.filter((f) => f !== file));
                         }
                       }}
                     />
-                    <span className='export-image-filename' title={file.path}>
+                    <span className="export-image-filename" title={file.path}>
                       {file.path}
                     </span>
                   </div>
@@ -200,15 +194,18 @@ const ModalContent: FC<{
           </div>
         </div>
         <div
-          className='export-image-preview-actions'
-          style={{ justifyContent: 'space-around' }}
+          className="export-image-preview-actions"
+          style={{ justifyContent: "space-around" }}
         >
-          <div className='export-image-progress-bar' style={{ width: '40%' }}>
+          <div className="export-image-progress-bar" style={{ width: "40%" }}>
             <div
-              className='export-image-progress-bar-inner'
+              className="export-image-progress-bar-inner"
               style={{
-                width: `${selectFiles.length > 0 ? 100 * (finished / selectFiles.length) : 0
-                  }%`,
+                width: `${
+                  selectFiles.length > 0
+                    ? 100 * (finished / selectFiles.length)
+                    : 0
+                }%`,
               }}
             ></div>
           </div>

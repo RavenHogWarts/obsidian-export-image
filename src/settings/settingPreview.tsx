@@ -1,12 +1,12 @@
-import React, { type FC, useEffect, useRef, useState } from 'react';
-import { type App, MarkdownRenderChild, MarkdownRenderer } from 'obsidian';
-import { createRoot } from 'react-dom/client';
-import { Watermark, type WatermarkProps } from '@pansy/react-watermark';
-import { getRemoteImageUrl } from '../utils/capture';
+import { Watermark, type WatermarkProps } from "@pansy/react-watermark";
+import { MarkdownRenderChild, MarkdownRenderer, type App } from "obsidian";
+import { useEffect, useRef, useState, type FC } from "react";
+import { createRoot } from "react-dom/client";
+import { getRemoteImageUrl } from "../utils/capture";
 
 const defaultConfig: WatermarkProps = {
   monitor: false,
-  mode: 'interval',
+  mode: "interval",
 };
 
 const Preview: FC<{ setting: ISettings; el: HTMLDivElement }> = ({
@@ -32,10 +32,10 @@ const Preview: FC<{ setting: ISettings; el: HTMLDivElement }> = ({
         gapY: setting.watermark.y ?? 100,
       };
 
-      if (setting.watermark.type === 'text') {
+      if (setting.watermark.type === "text") {
         properties.text = setting.watermark.text.content;
         properties.fontSize = setting.watermark.text.fontSize ?? 16;
-        properties.fontColor = setting.watermark.text.color ?? '#cccccc';
+        properties.fontColor = setting.watermark.text.color ?? "#cccccc";
         properties.image = undefined;
       } else {
         properties.image = await getRemoteImageUrl(setting.watermark.image.src);
@@ -47,7 +47,7 @@ const Preview: FC<{ setting: ISettings; el: HTMLDivElement }> = ({
   return (
     <Watermark {...properties}>
       <div
-        className='markdown-preview-view markdown-rendered export-image-setting-preview-mock'
+        className="markdown-preview-view markdown-rendered export-image-setting-preview-mock"
         ref={container}
       ></div>
     </Watermark>
@@ -59,15 +59,15 @@ export const renderPreview = async (root: HTMLElement, app: App) => {
   await MarkdownRenderer.render(
     app,
     [
-      '# test markdown',
-      'some content...\n',
-      'some content...\n',
-      'some content...\n',
-      'some content...\n',
-    ].join('\n'),
+      "# test markdown",
+      "some content...\n",
+      "some content...\n",
+      "some content...\n",
+      "some content...\n",
+    ].join("\n"),
     element,
-    '/',
-    new MarkdownRenderChild(element),
+    "/",
+    new MarkdownRenderChild(element)
   );
   const r = createRoot(root);
   return (setting: ISettings) => {

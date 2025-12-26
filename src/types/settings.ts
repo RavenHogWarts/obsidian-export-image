@@ -1,12 +1,12 @@
-import { isCreatable } from '../imageFormatTester';
+import { isCreatable } from "../imageFormatTester";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DEFAULT_SETTINGS: ISettings = {
   width: 640,
   showFilename: true,
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  resolutionMode: '3x' as ResolutionMode,
-  format: 'png0',
+  resolutionMode: "3x" as ResolutionMode,
+  format: "png0",
   showMetadata: false,
   recursive: false,
   quickExportSelection: false,
@@ -18,19 +18,19 @@ export const DEFAULT_SETTINGS: ISettings = {
   },
   authorInfo: {
     show: false,
-    align: 'right',
-    position: 'bottom',
+    align: "right",
+    position: "bottom",
   },
   watermark: {
     enable: false,
-    type: 'text',
+    type: "text",
     text: {
-      content: '',
+      content: "",
       fontSize: 28,
-      color: '#cccccc',
+      color: "#cccccc",
     },
     image: {
-      src: '',
+      src: "",
     },
     opacity: 0.2,
     rotate: 30,
@@ -42,16 +42,16 @@ export const DEFAULT_SETTINGS: ISettings = {
   split: {
     height: 1000,
     overlap: 80,
-    mode: 'none' as SplitMode,
+    mode: "none" as SplitMode,
   },
   customCSS: {
     enable: false,
-    src: '',
-    css: '',
+    src: "",
+    css: "",
   },
 };
 
-const formatList: FileFormat[] = ['png0', 'png1', 'jpg', 'webp', 'pdf'];
+const formatList: FileFormat[] = ["png0", "png1", "jpg", "webp", "pdf"];
 export const formatAvailable: FileFormat[] = [];
 
 // eslint-disable-next-line unicorn/prefer-top-level-await

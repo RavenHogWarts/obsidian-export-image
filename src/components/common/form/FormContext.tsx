@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 interface FormContextType {
   values: any;
@@ -28,4 +28,4 @@ export const FormProvider: React.FC<{
   );
 };
 
-export const useForm = () => useContext(FormContext); 
+export const useForm = () => useContext(FormContext);
