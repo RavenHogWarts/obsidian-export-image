@@ -164,7 +164,7 @@ const Target = forwardRef<
       >
         <Watermark {...watermarkProps}>
           <div
-            className='markdown-preview-view markdown-rendered export-image-preview-container'
+            className='export-image-preview-container'
             style={{
               width: `${setting.width}px`,
               transition: 'width 0.25s',
