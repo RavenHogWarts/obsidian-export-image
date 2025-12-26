@@ -6,25 +6,7 @@ export type BaseTranslation = BaseTranslationType
 export type BaseLocale = 'en'
 
 export type Locales =
-	| 'cs'
-	| 'da'
-	| 'de'
 	| 'en'
-	| 'es'
-	| 'fi'
-	| 'fr'
-	| 'hu'
-	| 'id'
-	| 'it'
-	| 'ja'
-	| 'ko'
-	| 'ms'
-	| 'nl'
-	| 'no'
-	| 'pl'
-	| 'pt'
-	| 'ro'
-	| 'ru'
 	| 'zh'
 
 export type Translation = RootTranslation
@@ -233,7 +215,7 @@ type RootTranslation = {
 			 */
 			label: string
 			/**
-			 * S​e​t​ ​h​o​w​ ​t​o​ ​d​i​s​p​l​a​y​ ​t​h​e​ ​t​i​t​l​e​.​ ​Y​o​u​ ​c​a​n​ ​c​h​o​o​s​e​ ​n​o​t​ ​t​o​ ​d​i​s​p​l​a​y​,​ ​e​n​t​e​r​ ​c​u​s​t​o​m​ ​i​n​p​u​t​ ​w​h​e​n​ ​e​x​p​o​r​t​i​n​g​,​ ​o​r​ ​r​e​a​d​ ​f​r​o​m​ ​f​r​o​n​t​m​a​t​t​e​r​ ​p​r​o​p​e​r​t​y​.
+			 * S​e​t​ ​h​o​w​ ​t​o​ ​d​i​s​p​l​a​y​ ​t​h​e​ ​t​i​t​l​e​.​ ​Y​o​u​ ​c​a​n​ ​c​h​o​o​s​e​ ​t​o​ ​h​i​d​e​ ​i​t​,​ ​e​n​t​e​r​ ​a​ ​c​u​s​t​o​m​ ​t​i​t​l​e​,​ ​o​r​ ​r​e​a​d​ ​f​r​o​m​ ​f​r​o​n​t​m​a​t​t​e​r​ ​p​r​o​p​e​r​t​y​.
 			 */
 			description: string
 			/**
@@ -241,7 +223,7 @@ type RootTranslation = {
 			 */
 			none: string
 			/**
-			 * C​u​s​t​o​m​ ​(​e​n​t​e​r​ ​w​h​e​n​ ​e​x​p​o​r​t​i​n​g​)
+			 * C​u​s​t​o​m
 			 */
 			custom: string
 			/**
@@ -743,7 +725,7 @@ export type TranslationFunctions = {
 			 */
 			label: () => LocalizedString
 			/**
-			 * Set how to display the title. You can choose not to display, enter custom input when exporting, or read from frontmatter property.
+			 * Set how to display the title. You can choose to hide it, enter a custom title, or read from frontmatter property.
 			 */
 			description: () => LocalizedString
 			/**
@@ -751,7 +733,7 @@ export type TranslationFunctions = {
 			 */
 			none: () => LocalizedString
 			/**
-			 * Custom (enter when exporting)
+			 * Custom
 			 */
 			custom: () => LocalizedString
 			/**
