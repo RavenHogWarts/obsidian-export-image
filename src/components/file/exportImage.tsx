@@ -45,7 +45,7 @@ export default async function (
         setting={{
           ...settings,
           showMetadata: false,
-          showFilename: { mode: "none" },
+          showFilename: { mode: "custom", customTitle: "" },
           split: { overlap: 0, height: 0, mode: "none" },
         }}
         frontmatter={{}}
