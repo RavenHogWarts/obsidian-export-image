@@ -4,8 +4,7 @@ import { isCreatable } from "../imageFormatTester";
 export const DEFAULT_SETTINGS: ISettings = {
   width: 640,
   showFilename: {
-    mode: "frontmatter",
-    frontmatterProperty: "title",
+    mode: "custom",
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   resolutionMode: "3x" as ResolutionMode,
