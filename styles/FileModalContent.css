@@ -66,6 +66,26 @@
   font-size: 14px;
   line-height: 28px;
   box-sizing: border-box;
+  max-height: var(--preview-height, 539px);
+  scrollbar-gutter: stable;
+
+  /* 美化滚动条 */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--background-modifier-border);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--background-modifier-border-hover);
+  }
 
   .setting-item {
     padding: 10px 0 !important;
