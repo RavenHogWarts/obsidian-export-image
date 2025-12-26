@@ -1,3 +1,9 @@
+body:not(.show-inline-title)
+  .export-image-root
+  .inline-title:not([data-level]) {
+  display: block !important;
+}
+
 .export-image-root {
   &.markdown-reading-view {
     container-type: normal !important;
