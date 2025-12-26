@@ -121,6 +121,13 @@ async function loadDocumentContent(
     const contentDiv = document.createElement("div");
     contentDiv.className = "markdown-preview-view markdown-rendered";
 
+    // 临时将容器添加到 DOM 中（隐藏），以便触发 Obsidian 的异步图标渲染
+    contentDiv.style.position = "fixed";
+    contentDiv.style.top = "-9999px";
+    contentDiv.style.left = "-9999px";
+    contentDiv.style.visibility = "hidden";
+    document.body.appendChild(contentDiv);
+
     // 获取当前视图作为渲染上下文
     const view = app.workspace.getActiveViewOfType(MarkdownView);
 
@@ -133,12 +140,21 @@ async function loadDocumentContent(
       view || new MarkdownRenderChild(contentDiv)
     );
 
+    // 等待图片等资源加载完成
+    await delay(200);
+
+    // 从 DOM 中移除临时容器
+    document.body.removeChild(contentDiv);
+
+    // 清理临时样式
+    contentDiv.style.position = "";
+    contentDiv.style.top = "";
+    contentDiv.style.left = "";
+    contentDiv.style.visibility = "";
+
     // 设置元素内容
     el.innerHTML = "";
     el.appendChild(contentDiv);
-
-    // 等待图片等资源加载完成
-    await delay(200);
 
     return el;
   } catch (error) {
