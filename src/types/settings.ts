@@ -3,7 +3,10 @@ import { isCreatable } from "../imageFormatTester";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DEFAULT_SETTINGS: ISettings = {
   width: 640,
-  showFilename: true,
+  showFilename: {
+    mode: "frontmatter",
+    frontmatterProperty: "title",
+  },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   resolutionMode: "3x" as ResolutionMode,
   format: "png0",

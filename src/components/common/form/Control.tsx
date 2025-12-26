@@ -27,7 +27,8 @@ const Control: FC<{
   const inputReference = useRef<HTMLInputElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
   const onChange = (value: any) => {
-    const newSetting = { ...setting };
+    // 使用深拷贝确保嵌套对象也创建新的引用，这样 React 才能检测到变化
+    const newSetting = JSON.parse(JSON.stringify(setting)) as ISettings;
     set(newSetting, fieldSchema.path, value);
     update(newSetting);
   };

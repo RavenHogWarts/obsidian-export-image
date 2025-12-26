@@ -1,9 +1,15 @@
 declare type FileFormat = "png0" | "png1" | "jpg" | "pdf" | "webp";
 
+declare type ShowFilenameMode = "none" | "custom" | "frontmatter";
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 declare type ISettings = {
   width?: number;
-  showFilename: boolean;
+  showFilename: {
+    mode: ShowFilenameMode;
+    frontmatterProperty?: string;
+    customTitle?: string;
+  };
   resolutionMode: ResolutionMode;
   format: FileFormat;
   showMetadata: boolean;

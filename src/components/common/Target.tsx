@@ -63,6 +63,26 @@ const Target = forwardRef<
     const clipRef = useRef<HTMLDivElement>(null);
     const [rootHeight, setRootHeight] = useState(0);
 
+    const displayTitle = useMemo(() => {
+      const { mode, frontmatterProperty, customTitle } = setting.showFilename;
+
+      if (mode === "none") {
+        return null;
+      }
+
+      if (mode === "frontmatter" && frontmatterProperty && frontmatter) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return frontmatter[frontmatterProperty] ?? title;
+      }
+
+      if (mode === "custom") {
+        return customTitle || title;
+      }
+
+      // fallback
+      return title;
+    }, [setting.showFilename, frontmatter, title]);
+
     useEffect(() => {
       if (!rootRef.current) return;
       const observer = new ResizeObserver(() => {
@@ -210,9 +230,9 @@ const Target = forwardRef<
                 padding: `${setting.padding.top}px ${setting.padding.right}px ${setting.padding.bottom}px ${setting.padding.left}px`,
               }}
             >
-              {setting.showFilename && (
+              {displayTitle && (
                 <div className="inline-title" autoCapitalize="on">
-                  {title}
+                  {displayTitle}
                 </div>
               )}
               {setting.showMetadata &&

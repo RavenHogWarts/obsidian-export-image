@@ -69,9 +69,17 @@ const de = {
       },
     },
     filename: {
-      label: "Dateinamen als Titel einbeziehen",
+      label: "Titelanzeige-Modus",
       description:
-        "Stellen Sie ein, ob der Dateiname als Titel einbezogen werden soll. Wenn Obsidian das Dokument anzeigt, wird der Dateiname als h1 Titel angezeigt. Manchmal ist das nicht erwünscht, und Sie erhalten doppelte Titel.",
+        "Legen Sie fest, wie der Titel angezeigt werden soll. Sie können wählen, ob er ausgeblendet, beim Export benutzerdefiniert eingegeben oder aus der frontmatter-Eigenschaft gelesen werden soll.",
+      none: "Ausblenden",
+      custom: "Benutzerdefiniert",
+      frontmatter: "Frontmatter-Eigenschaft verwenden",
+      frontmatterProperty: "Frontmatter-Eigenschaftsname",
+      frontmatterPropertyDesc:
+        "Geben Sie den frontmatter-Eigenschaftsnamen an, um den Titel zu erhalten, z.B. title, name usw.",
+      customTitle: "Benutzerdefinierter Titel",
+      customTitlePlaceholder: "Benutzerdefinierten Titel eingeben",
     },
     resolutionMode: {
       label: "Bild in Auflösungsmodus",

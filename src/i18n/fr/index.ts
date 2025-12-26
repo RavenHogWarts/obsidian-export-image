@@ -69,9 +69,17 @@ const fr = {
       },
     },
     filename: {
-      label: "Inclure le nom du fichier comme titre",
+      label: "Mode d'affichage du titre",
       description:
-        "Définissez si le nom du fichier doit être inclus comme titre. Lorsqu'Obsidian affiche le document, il affiche le nom du fichier comme un titre h1. Parfois, ce n'est pas ce que vous souhaitez, et vous obtiendrez des titres en double.",
+        "Définissez comment afficher le titre. Vous pouvez choisir de le masquer, d'entrer un titre personnalisé lors de l'exportation, ou de le lire depuis une propriété frontmatter.",
+      none: "Masquer",
+      custom: "Personnalisé",
+      frontmatter: "Utiliser la propriété frontmatter",
+      frontmatterProperty: "Nom de la propriété frontmatter",
+      frontmatterPropertyDesc:
+        "Spécifiez le nom de la propriété frontmatter pour obtenir le titre, comme title, name, etc.",
+      customTitle: "Titre personnalisé",
+      customTitlePlaceholder: "Entrez le titre personnalisé",
     },
     resolutionMode: {
       label: "Image en mode résolution",
