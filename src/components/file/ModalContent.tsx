@@ -306,13 +306,35 @@ const ModalContent: FC<{
 
   useEffect(() => {
     const cssPath = formData.customCSS?.css;
-    if (cssPath) {
-      readCSSFile(app, cssPath).then(content => {
-        setCustomCSSContent(content);
-      }).catch(console.error);
-    } else {
-      setCustomCSSContent('');
-    }
+
+    // 读取 CSS 文件内容的辅助函数
+    const loadCSSContent = () => {
+      if (cssPath) {
+        readCSSFile(app, cssPath).then(content => {
+          setCustomCSSContent(content);
+        }).catch(console.error);
+      } else {
+        setCustomCSSContent('');
+      }
+    };
+
+    // 初始加载
+    loadCSSContent();
+
+    // 监听文件修改事件，当选中的 CSS 文件内容变化时实时更新
+    const handleFileModify = (file: { path: string }) => {
+      if (file.path === cssPath) {
+        loadCSSContent();
+      }
+    };
+
+    // 注册事件监听
+    const eventRef = app.vault.on('modify', handleFileModify);
+
+    // 清理函数：取消事件监听
+    return () => {
+      app.vault.offref(eventRef);
+    };
   }, [app, formData.customCSS?.css]);
 
   const handleSave = useCallback(async () => {

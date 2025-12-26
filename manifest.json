@@ -2,7 +2,7 @@
 	"id": "obsidian-export-image-fork",
 	"name": "Export Image plugin (Fork)",
 	"version": "0.0.2",
-	"minAppVersion": "1.4.0",
+	"minAppVersion": "1.8.0",
 	"description": "Easily convert your article to image.",
 	"author": "Zhou Hua & RavenHogwarts",
 	"authorUrl": "",
