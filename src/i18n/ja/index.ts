@@ -68,9 +68,17 @@ const ja = {
       },
     },
     filename: {
-      label: "ファイル名をタイトルとして含む",
+      label: "タイトル表示モード",
       description:
-        "ファイル名をタイトルとして含むかどうかを設定します。Obsidianがドキュメントを表示する時、ファイル名をh1タイトルとして表示します。これは望ましくない場合もあり、タイトルが重複することがあります。",
+        "タイトルの表示方法を設定します。非表示、エクスポート時にカスタム入力、またはfrontmatterプロパティから読み取ることができます。",
+      none: "非表示",
+      custom: "カスタム",
+      frontmatter: "frontmatterプロパティを使用",
+      frontmatterProperty: "frontmatterプロパティ名",
+      frontmatterPropertyDesc:
+        "タイトルを取得するfrontmatterプロパティ名を指定します（例：title、nameなど）。",
+      customTitle: "カスタムタイトル",
+      customTitlePlaceholder: "カスタムタイトルを入力",
     },
     resolutionMode: {
       label: "解像度モードの画像",

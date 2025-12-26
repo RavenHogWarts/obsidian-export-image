@@ -14,7 +14,7 @@ const en = {
   saveSuccess: "Export and save the image as {filePath}.",
   saveFail: "Failed to save the image",
   saveVault: "Save to Vault",
-  includingFilename: "Including File Name As Title",
+  includingFilename: "Title Display Mode",
   imageWidth: "Image Width",
   exportImage: "Export to image",
   exportSelectionImage: "Export selection to image",
@@ -68,9 +68,17 @@ const en = {
       },
     },
     filename: {
-      label: "Include file name as title",
+      label: "Title display mode",
       description:
-        "Set whether to include the file name as the title. When Obsidian displays the document, it will display the file name as an h1 title. Sometimes this is not what you want, and you will get duplicate titles.",
+        "Set how to display the title. You can choose to hide it, enter a custom title, or read from frontmatter property.",
+      none: "Hide",
+      custom: "Custom",
+      frontmatter: "Use frontmatter property",
+      frontmatterProperty: "Frontmatter property name",
+      frontmatterPropertyDesc:
+        "Specify the frontmatter property name to get the title, such as title, name, etc.",
+      customTitle: "Custom title",
+      customTitlePlaceholder: "Enter custom title",
     },
     resolutionMode: {
       label: "Resolution mode image",

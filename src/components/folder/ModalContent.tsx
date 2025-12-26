@@ -57,8 +57,25 @@ const ModalContent: FC<{
     },
     {
       label: L.includingFilename(),
-      path: "showFilename",
-      type: "boolean",
+      path: "showFilename.mode",
+      type: "select",
+      options: [
+        { value: "none", text: L.setting.filename.none() },
+        { value: "custom", text: L.setting.filename.custom() },
+        { value: "frontmatter", text: L.setting.filename.frontmatter() },
+      ],
+    },
+    {
+      label: L.setting.filename.frontmatterProperty(),
+      path: "showFilename.frontmatterProperty",
+      type: "string",
+      when: (settings) => settings.showFilename.mode === "frontmatter",
+    },
+    {
+      label: L.setting.filename.customTitle(),
+      path: "showFilename.customTitle",
+      type: "string",
+      when: (settings) => settings.showFilename.mode === "custom",
     },
     {
       label: L.imageWidth(),

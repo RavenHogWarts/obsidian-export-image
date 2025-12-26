@@ -68,9 +68,17 @@ const es = {
       },
     },
     filename: {
-      label: "Incluir nombre de archivo como título",
+      label: "Modo de visualización del título",
       description:
-        "Establece si incluir el nombre del archivo como título. Cuando Obsidian muestra el documento, muestra el nombre del archivo como un título h1. A veces esto no es lo que quieres y terminarás con títulos duplicados.",
+        "Configura cómo mostrar el título. Puedes elegir ocultarlo, ingresar uno personalizado al exportar, o leerlo de una propiedad frontmatter.",
+      none: "Ocultar",
+      custom: "Personalizado",
+      frontmatter: "Usar propiedad frontmatter",
+      frontmatterProperty: "Nombre de propiedad frontmatter",
+      frontmatterPropertyDesc:
+        "Especifica el nombre de la propiedad frontmatter para obtener el título, como title, name, etc.",
+      customTitle: "Título personalizado",
+      customTitlePlaceholder: "Ingresa el título personalizado",
     },
     resolutionMode: {
       label: "Imagen en modo resolución",

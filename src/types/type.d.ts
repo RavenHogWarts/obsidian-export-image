@@ -1,9 +1,16 @@
 declare type FileFormat = "png0" | "png1" | "jpg" | "pdf" | "webp";
 
+// 显示标题的模式
+declare type ShowFilenameMode = "none" | "custom" | "frontmatter";
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 declare type ISettings = {
   width?: number;
-  showFilename: boolean;
+  showFilename: {
+    mode: ShowFilenameMode;
+    frontmatterProperty?: string; // 当 mode 为 'frontmatter' 时，指定要读取的属性名
+    customTitle?: string; // 当 mode 为 'custom' 时，使用的自定义标题
+  };
   resolutionMode: ResolutionMode;
   format: FileFormat;
   showMetadata: boolean;

@@ -86,9 +86,27 @@ export const createSettingSchema = async (
     // 显示设置
     {
       label: L.setting.filename.label(),
-      path: "showFilename",
-      type: "boolean",
+      path: "showFilename.mode",
+      type: "select",
       desc: L.setting.filename.description(),
+      options: [
+        { value: "none", text: L.setting.filename.none() },
+        { value: "custom", text: L.setting.filename.custom() },
+        { value: "frontmatter", text: L.setting.filename.frontmatter() },
+      ],
+    },
+    {
+      label: L.setting.filename.frontmatterProperty(),
+      path: "showFilename.frontmatterProperty",
+      type: "string",
+      desc: L.setting.filename.frontmatterPropertyDesc(),
+      when: (settings) => settings.showFilename.mode === "frontmatter",
+    },
+    {
+      label: L.setting.filename.customTitle(),
+      path: "showFilename.customTitle",
+      type: "string",
+      when: (settings) => settings.showFilename.mode === "custom",
     },
     {
       label: L.setting.metadata.label(),

@@ -13,7 +13,7 @@ const zh = {
   saveSuccess: "已导出并保存图片至 {filePath}。",
   saveFail: "保存图片失败",
   saveVault: "保存到 vault",
-  includingFilename: "包含文件名作为标题",
+  includingFilename: "标题显示模式",
   imageWidth: "图片宽度",
   exportImage: "导出为图片",
   exportFolder: "导出所有笔记为图片",
@@ -63,9 +63,17 @@ const zh = {
       },
     },
     filename: {
-      label: "是否包含文件名作为标题",
+      label: "标题显示模式",
       description:
-        "设置是否包含文件名作为标题。Obsidian 展示文档时，会把文件名作为 h1 标题，有时候并不符合预期，产生标题重复的情况。",
+        "设置标题的显示方式。可以选择不显示、自定义输入，或从 frontmatter 属性中读取。",
+      none: "不显示",
+      custom: "自定义",
+      frontmatter: "使用 frontmatter 属性值",
+      frontmatterProperty: "Frontmatter 属性名",
+      frontmatterPropertyDesc:
+        "指定用于获取标题的 frontmatter 属性名，如 title、name 等。",
+      customTitle: "自定义标题",
+      customTitlePlaceholder: "请输入自定义标题",
     },
     resolutionMode: {
       label: "分辨率模式图片",
