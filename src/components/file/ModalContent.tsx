@@ -445,7 +445,12 @@ const ModalContent: FC<{
   return (
     <div className="export-image-preview-root">
       <div className="export-image-preview-main">
-        <div className="export-image-preview-left">
+        <div
+          className="export-image-preview-left"
+          style={
+            { "--preview-height": `${mainHeight}px` } as React.CSSProperties
+          }
+        >
           <FormItems
             formSchema={formSchema}
             update={setFormData}
