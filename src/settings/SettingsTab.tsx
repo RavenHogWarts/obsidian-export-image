@@ -7,7 +7,7 @@ import SettingPage from "./SettingPage";
 export default class ImageSettingTab extends PluginSettingTab {
   plugin: ExportImagePlugin;
   root: Root | null = null;
-  icon: string = "square-dashed-bottom-code";
+  icon: string = "image-upscale";
 
   constructor(app: App, plugin: ExportImagePlugin) {
     super(app, plugin);
