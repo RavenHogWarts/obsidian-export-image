@@ -1,12 +1,18 @@
-import React, { type FC, useEffect, useRef, useCallback, useState } from 'react';
-import get from 'lodash/get';
-import set from 'lodash/set';
-import debounce from 'lodash/debounce';
-import { requestUrl, setIcon, type App, Modal } from 'obsidian';
-import { fileToBase64 } from '../../../utils';
-import L from '../../../i18n/L';
-import ImageSelectModal from '../imageSelectModal';
-import { getRemoteImageUrl } from 'src/utils/capture';
+import debounce from "lodash/debounce";
+import get from "lodash/get";
+import set from "lodash/set";
+import { Modal, setIcon, type App } from "obsidian";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FC,
+} from "react";
+import { getRemoteImageUrl } from "src/utils/capture";
+import L from "../../../i18n/L";
+import { fileToBase64 } from "../../../utils";
+import ImageSelectModal from "../imageSelectModal";
 
 const Control: FC<{
   fieldSchema: FieldSchema<ISettings>;
@@ -15,7 +21,9 @@ const Control: FC<{
   app: App;
 }> = ({ fieldSchema, setting, update, app }) => {
   const value: ValueType = get(setting, fieldSchema.path) as ValueType;
-  const [processedImageUrl, setProcessedImageUrl] = useState<string | undefined>(undefined);
+  const [processedImageUrl, setProcessedImageUrl] = useState<
+    string | undefined
+  >(undefined);
   const inputReference = useRef<HTMLInputElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
   const onChange = (value: any) => {
@@ -33,13 +41,13 @@ const Control: FC<{
 
   useEffect(() => {
     if (iconRef.current) {
-      setIcon(iconRef.current, 'x');
+      setIcon(iconRef.current, "x");
     }
   }, [iconRef.current]);
 
   useEffect(() => {
     const processImage = async () => {
-      if (fieldSchema.type === 'file' && typeof value === 'string') {
+      if (fieldSchema.type === "file" && typeof value === "string") {
         const url = await getRemoteImageUrl(value);
         setProcessedImageUrl(url);
       } else {
@@ -53,12 +61,12 @@ const Control: FC<{
     const file = inputReference.current?.files?.[0];
     if (file) {
       onChange(await fileToBase64(file));
-      inputReference.current!.value = '';
+      inputReference.current!.value = "";
     }
   };
 
   const select = () => {
-    const modal = new ImageSelectModal(app, img => {
+    const modal = new ImageSelectModal(app, (img) => {
       onChange(img);
       modal.close();
     });
@@ -66,54 +74,53 @@ const Control: FC<{
   };
 
   switch (fieldSchema.type) {
-    case 'number': {
+    case "number": {
       return (
         <input
-          type='number'
+          type="number"
           value={value}
-          onChange={e => {
+          onChange={(e) => {
             onChange(e.target.value ? Number(e.target.value) : undefined);
-          }
-          }
+          }}
         />
       );
     }
 
-    case 'string': {
+    case "string": {
       return (
         <input
-          type='text'
+          type="text"
           value={value}
-          onChange={e => {
+          onChange={(e) => {
             onChange(e.target.value);
           }}
         />
       );
     }
 
-    case 'boolean': {
+    case "boolean": {
       return (
         <div
-          className={`checkbox-container${value ? ' is-enabled' : ''}`}
+          className={`checkbox-container${value ? " is-enabled" : ""}`}
           onClick={() => {
             onChange(!get(setting, fieldSchema.path));
           }}
         >
-          <input type='checkbox' checked={value as unknown as boolean} />
+          <input type="checkbox" checked={value as unknown as boolean} />
         </div>
       );
     }
 
-    case 'select': {
+    case "select": {
       return (
         <select
           value={value}
-          onChange={e => {
+          onChange={(e) => {
             onChange(e.target.value);
           }}
-          className='dropdown'
+          className="dropdown"
         >
-          {fieldSchema.options?.map(option => (
+          {fieldSchema.options?.map((option) => (
             <option key={option.value} value={option.value}>
               {option.text}
             </option>
@@ -122,15 +129,22 @@ const Control: FC<{
       );
     }
 
-    case 'file': {
+    case "file": {
       return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-          <div style={{ display: 'flex', gap: '8px' }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: "8px",
+          }}
+        >
+          <div style={{ display: "flex", gap: "8px" }}>
             <div
-              className='user-info-avatar'
+              className="user-info-avatar"
               style={{
-                position: 'relative',
-                display: value ? 'block' : 'none',
+                position: "relative",
+                display: value ? "block" : "none",
               }}
             >
               {processedImageUrl && (
@@ -138,38 +152,40 @@ const Control: FC<{
                   src={processedImageUrl}
                   alt="avatar"
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
                   }}
                 />
               )}
               <div
                 ref={iconRef}
-                onClick={() => (onChange(undefined))}
-                style={{
-                  position: 'absolute',
-                  top: '-10px',
-                  right: '-10px',
-                  width: '20px',
-                  height: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'black',
-                  color: 'white',
-                  borderRadius: '50%',
-                  cursor: 'pointer',
-                  ['--icon-size' as string]: '12px',
-                  ['--icon-color' as string]: 'var(--color-red)',
-                } as React.CSSProperties}
+                onClick={() => onChange(undefined)}
+                style={
+                  {
+                    position: "absolute",
+                    top: "-10px",
+                    right: "-10px",
+                    width: "20px",
+                    height: "20px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "black",
+                    color: "white",
+                    borderRadius: "50%",
+                    cursor: "pointer",
+                    ["--icon-size" as string]: "12px",
+                    ["--icon-color" as string]: "var(--color-red)",
+                  } as React.CSSProperties
+                }
               ></div>
             </div>
             <button onClick={() => inputReference.current?.click()}>
               {L.setting.watermark.image.src.upload()}
               <input
-                style={{ display: 'none' }}
-                type='file'
+                style={{ display: "none" }}
+                type="file"
                 ref={inputReference}
                 onChange={upload}
               />
@@ -177,56 +193,60 @@ const Control: FC<{
             <button onClick={select}>
               {L.setting.watermark.image.src.select()}
             </button>
-            <button onClick={() => {
-              const currentValue = value || '';
-              const modal = new Modal(app);
-              modal.titleEl.setText(L.imageUrl());
+            <button
+              onClick={() => {
+                const currentValue = value || "";
+                const modal = new Modal(app);
+                modal.titleEl.setText(L.imageUrl());
 
-              const inputContainer = modal.contentEl.createDiv({
-                attr: {
-                  style: 'margin: 1em 0;'
-                }
-              });
-              const input = inputContainer.createEl('input', {
-                attr: {
-                  type: 'text',
-                  placeholder: '请输入图片URL',
-                  style: 'width: 100%'
-                }
-              });
+                const inputContainer = modal.contentEl.createDiv({
+                  attr: {
+                    style: "margin: 1em 0;",
+                  },
+                });
+                const input = inputContainer.createEl("input", {
+                  attr: {
+                    type: "text",
+                    placeholder: "请输入图片URL",
+                    style: "width: 100%",
+                  },
+                });
 
-              input.onkeydown = (e) => {
-                if (e.key === 'Enter') {
+                input.onkeydown = (e) => {
+                  if (e.key === "Enter") {
+                    onChange(input.value);
+                    modal.close();
+                  } else if (e.key === "Escape") {
+                    modal.close();
+                  }
+                };
+
+                const buttonDiv = modal.contentEl.createDiv({
+                  cls: "modal-button-container",
+                  attr: {
+                    style:
+                      "display: flex; justify-content: flex-end; gap: 8px; margin-top: 1em;",
+                  },
+                });
+
+                const confirmButton = buttonDiv.createEl("button", {
+                  text: L.confirm(),
+                  cls: "mod-cta",
+                });
+                confirmButton.onclick = () => {
                   onChange(input.value);
                   modal.close();
-                } else if (e.key === 'Escape') {
-                  modal.close();
-                }
-              };
+                };
 
-              const buttonDiv = modal.contentEl.createDiv({
-                cls: 'modal-button-container',
-                attr: {
-                  style: 'display: flex; justify-content: flex-end; gap: 8px; margin-top: 1em;'
-                }
-              });
+                buttonDiv.createEl("button", { text: L.cancel() }).onclick =
+                  () => {
+                    modal.close();
+                  };
 
-              const confirmButton = buttonDiv.createEl('button', {
-                text: L.confirm(),
-                cls: 'mod-cta'
-              });
-              confirmButton.onclick = () => {
-                onChange(input.value);
-                modal.close();
-              };
-
-              buttonDiv.createEl('button', { text: L.cancel() }).onclick = () => {
-                modal.close();
-              };
-
-              modal.open();
-              setTimeout(() => input.focus(), 0);
-            }}>
+                modal.open();
+                setTimeout(() => input.focus(), 0);
+              }}
+            >
               {L.imageUrl()}
             </button>
           </div>
@@ -234,15 +254,21 @@ const Control: FC<{
       );
     }
 
-    case 'color': {
+    case "color": {
       return (
         <input
-          type='color'
-          value={value ?? '#cccccc'}
-          onChange={e => {
+          type="color"
+          value={value ?? "#cccccc"}
+          onChange={(e) => {
             onChange(e.target.value);
           }}
-          style={{ width: '60px', height: '30px', padding: '0', border: 'none', cursor: 'pointer' }}
+          style={{
+            width: "60px",
+            height: "30px",
+            padding: "0",
+            border: "none",
+            cursor: "pointer",
+          }}
         />
       );
     }

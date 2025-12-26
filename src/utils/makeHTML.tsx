@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
-  type App,
   MarkdownRenderChild,
   MarkdownRenderer,
   MarkdownView,
+  type App,
   type TFile,
-} from 'obsidian';
-import React from 'react';
-import { type Root, createRoot } from 'react-dom/client';
-import Target from 'src/components/common/Target';
-import { delay, getMetadata } from '.';
+} from "obsidian";
+import { createRoot, type Root } from "react-dom/client";
+import Target from "src/components/common/Target";
+import { delay, getMetadata } from ".";
 
 let root: Root | undefined;
 
@@ -19,7 +18,7 @@ export default async function makeHTML(
   file: TFile,
   settings: ISettings,
   app: App,
-  container: HTMLElement,
+  container: HTMLElement
 ) {
   if (root) {
     root.unmount();
@@ -28,19 +27,20 @@ export default async function makeHTML(
   }
 
   const markdown = await app.vault.cachedRead(file);
-  const element = document.createElement('div');
+  const element = document.createElement("div");
   await MarkdownRenderer.render(
     app,
     markdown,
     element.createDiv(),
     file.path,
-    app.workspace.getActiveViewOfType(MarkdownView)
-    || app.workspace.activeLeaf?.view
-    || new MarkdownRenderChild(element),
+    app.workspace.getActiveViewOfType(MarkdownView) ||
+      app.workspace.activeLeaf?.view ||
+      new MarkdownRenderChild(element)
   );
 
   /* @ts-ignore */
-  const metadataMap: Record<string, { type: MetadataType }> = app.metadataCache.getAllPropertyInfos();
+  const metadataMap: Record<string, { type: MetadataType }> =
+    app.metadataCache.getAllPropertyInfos();
 
   const frontmatter = getMetadata(file, app);
 
@@ -54,8 +54,8 @@ export default async function makeHTML(
       app={app}
       metadataMap={metadataMap}
       isProcessing
-    />,
+    />
   );
   await delay(100);
-  return (element).closest('.export-image-root') || element;
+  return element.closest(".export-image-root") || element;
 }

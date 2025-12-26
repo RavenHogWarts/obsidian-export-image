@@ -1,14 +1,8 @@
-import { type App, Modal, type TFile } from 'obsidian';
-import React, {
-  type FC,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { type Root, createRoot } from 'react-dom/client';
-import { createHtml, fileToBase64 } from '../../utils';
-import L from '../../i18n/L';
+import { Modal, type App, type TFile } from "obsidian";
+import { useCallback, useEffect, useRef, useState, type FC } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import L from "../../i18n/L";
+import { createHtml, fileToBase64 } from "../../utils";
 
 const ImageSelect: FC<{
   imageList: TFile[];
@@ -17,15 +11,15 @@ const ImageSelect: FC<{
   onClose: () => void;
 }> = ({ imageList, app, onSelect, onClose }) => {
   const [list, setList] = useState<TFile[]>(imageList);
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState<TFile | undefined>(
-    imageList?.[0] || null,
+    imageList?.[0] || null
   );
   const previewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (keyword) {
-      const regExp = new RegExp(keyword.split('').join('.*'), 'i');
-      setList(imageList.filter(file => regExp.test(file.path)));
+      const regExp = new RegExp(keyword.split("").join(".*"), "i");
+      setList(imageList.filter((file) => regExp.test(file.path)));
     } else {
       setList(imageList);
     }
@@ -33,48 +27,50 @@ const ImageSelect: FC<{
   useEffect(() => {
     if (list.length === 0) {
       setSelected(undefined);
-    } else if (!selected || !list.find(file => file.path === selected.path)) {
+    } else if (!selected || !list.find((file) => file.path === selected.path)) {
       setSelected(list?.[0] || null);
     }
   }, [selected, list]);
   useEffect(() => {
     previewRef.current?.empty();
     if (selected) {
-      createHtml(selected.path, app).then(html =>
-        // eslint-disable-next-line unicorn/prefer-dom-node-append
-        previewRef.current?.appendChild(html),
-      ).catch(() => {
-        // empty
-      });
+      createHtml(selected.path, app)
+        .then((html) =>
+          // eslint-disable-next-line unicorn/prefer-dom-node-append
+          previewRef.current?.appendChild(html)
+        )
+        .catch(() => {
+          // empty
+        });
     }
   }, [selected]);
   const submit = useCallback(async () => {
     if (selected) {
       const file = await selected.vault.adapter.readBinary(selected.path);
-      const blob = new Blob([file], { type: 'image/' + selected.extension });
+      const blob = new Blob([file], { type: "image/" + selected.extension });
       const url = await fileToBase64(blob);
       onSelect(url);
     }
   }, [onSelect, selected]);
   return (
-    <div className='export-image-select-photo'>
-      <div className='search-input-container'>
+    <div className="export-image-select-photo">
+      <div className="search-input-container">
         <input
-          enterKeyHint='search'
-          type='search'
-          spellCheck='false'
+          enterKeyHint="search"
+          type="search"
+          spellCheck="false"
           value={keyword}
           placeholder={L.imageSelect.search()}
-          onChange={e => {
+          onChange={(e) => {
             setKeyword(e.target.value);
           }}
         />
-        <div className='search-input-clear-button'></div>
+        <div className="search-input-clear-button"></div>
       </div>
-      <div className='export-image-select-photo-main'>
-        <div className='export-image-select-photo-left'>
+      <div className="export-image-select-photo-main">
+        <div className="export-image-select-photo-left">
           {list.length > 0 ? (
-            list.map(file => (
+            list.map((file) => (
               <div
                 key={file.path}
                 title={file.path}
@@ -84,27 +80,27 @@ const ImageSelect: FC<{
                 style={{
                   background:
                     selected?.path === file.path
-                      ? 'var(--background-modifier-hover)'
-                      : 'transparent',
+                      ? "var(--background-modifier-hover)"
+                      : "transparent",
                 }}
               >
                 {file.path}
               </div>
             ))
           ) : (
-            <div className='export-image-select-empty'>
+            <div className="export-image-select-empty">
               {L.imageSelect.empty()}
             </div>
           )}
         </div>
-        <div className='export-image-select-preview' ref={previewRef}></div>
+        <div className="export-image-select-preview" ref={previewRef}></div>
       </div>
-      <div className='export-image-select-selected'>
-        {selected?.path || ' '}
+      <div className="export-image-select-selected">
+        {selected?.path || " "}
       </div>
-      <div className='export-image-select-actions'>
+      <div className="export-image-select-actions">
         <button
-          className='mod-cta'
+          className="mod-cta"
           disabled={!selected}
           onClick={submit}
           style={{ marginRight: 40 }}
@@ -129,7 +125,7 @@ export default class ImageSelectModal extends Modal {
     const { contentEl, select } = this;
     const imageList = this.app.vault
       .getFiles()
-      .filter(file => /^jpe?g|png$/i.test(file.extension || ''));
+      .filter((file) => /^jpe?g|png$/i.test(file.extension || ""));
     this.root = createRoot(contentEl);
 
     this.root.render(
@@ -140,7 +136,7 @@ export default class ImageSelectModal extends Modal {
         onClose={() => {
           this.close();
         }}
-      ></ImageSelect>,
+      ></ImageSelect>
     );
   }
 
