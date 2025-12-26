@@ -63,7 +63,6 @@ const Target = forwardRef<
     const clipRef = useRef<HTMLDivElement>(null);
     const [rootHeight, setRootHeight] = useState(0);
 
-    // 根据 showFilename.mode 计算要显示的标题
     const displayTitle = useMemo(() => {
       const { mode, frontmatterProperty, customTitle } = setting.showFilename;
 

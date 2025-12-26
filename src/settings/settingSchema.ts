@@ -284,6 +284,7 @@ export const createSettingSchema = async (
       label: L.setting.customCSS.src.label(),
       path: "customCSS.src",
       type: "string",
+      desc: L.setting.customCSS.src.description(),
       when: (settings) => settings.customCSS.enable,
     },
     {
@@ -294,6 +295,7 @@ export const createSettingSchema = async (
         { value: "", text: L.setting.customCSS.css.default() },
         ...cssFiles.map((file) => ({ value: file.path, text: file.name })),
       ],
+      desc: L.setting.customCSS.css.description(),
       when: (settings) => settings.customCSS.enable,
     },
   ];
