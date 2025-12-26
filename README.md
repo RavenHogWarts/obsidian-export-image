@@ -38,9 +38,13 @@ Also, you can access this function from the editor menu:
 
 ## Installation
 
-### Obsidian
+### Install via BRAT
 
-Search `Export Image` in community plugins.
+1. Install [**Obsidian42 - BRAT**](https://obsidian.md/plugins?id=obsidian42-brat) from the Community Plugins.
+2. Open the command palette (`Ctrl/Cmd + P`) and execute the command `BRAT: Add a beta plugin for testing`.
+3. Enter the following repository URL: `RavenHogWarts/obsidian-export-image`.
+4. Click **Add Plugin**.
+5. In **Community Plugins**, enable the **Export Image** plugin.
 
 ## Custom Styles
 
