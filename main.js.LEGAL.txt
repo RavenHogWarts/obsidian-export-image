@@ -1,9 +1,9 @@
 Bundled license information:
 
-react/cjs/react.production.js:
+scheduler/cjs/scheduler.production.js:
   /**
    * @license React
-   * react.production.js
+   * scheduler.production.js
    *
    * Copyright (c) Meta Platforms, Inc. and affiliates.
    *
@@ -11,10 +11,10 @@ react/cjs/react.production.js:
    * LICENSE file in the root directory of this source tree.
    */
 
-scheduler/cjs/scheduler.production.js:
+react/cjs/react.production.js:
   /**
    * @license React
-   * scheduler.production.js
+   * react.production.js
    *
    * Copyright (c) Meta Platforms, Inc. and affiliates.
    *
@@ -105,6 +105,17 @@ lodash/lodash.js:
    * Released under MIT license <https://lodash.com/license>
    * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
    * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+   */
+
+react/cjs/react-jsx-runtime.production.js:
+  /**
+   * @license React
+   * react-jsx-runtime.production.js
+   *
+   * Copyright (c) Meta Platforms, Inc. and affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
    */
 
 jspdf/dist/jspdf.es.min.js:

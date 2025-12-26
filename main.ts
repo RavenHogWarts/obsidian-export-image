@@ -1,2 +1,2 @@
-export { default } from './src/ExportImagePlugin';
-import './styles/style.css';
+export { default } from "./src/ExportImagePlugin";
+import "./styles/styles.ts";

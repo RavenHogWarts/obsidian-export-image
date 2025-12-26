@@ -64,6 +64,7 @@ const result = await esbuild
     format: "cjs",
     // watch: !prod,
     target: "esnext",
+    jsx: "automatic",
     logLevel: "info",
     sourcemap: prod ? false : "inline",
     treeShaking: true,
