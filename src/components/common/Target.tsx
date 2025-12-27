@@ -1,6 +1,5 @@
 import { Watermark, type WatermarkProps } from "@pansy/react-watermark";
 import clsx from "clsx";
-import { lowerCase } from "lodash";
 import { type App, type FrontMatterCache } from "obsidian";
 import {
   forwardRef,
@@ -238,22 +237,10 @@ const Target = forwardRef<
               {setting.showMetadata &&
                 frontmatter &&
                 Object.keys(frontmatter).length > 0 && (
-                  <div
-                    className="metadata-container"
-                    style={{ display: "block" }}
-                  >
-                    <div className="metadata-content">
-                      {Object.keys(frontmatter).map((name) => (
-                        <Metadata
-                          name={name}
-                          key={name}
-                          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                          value={frontmatter[name]}
-                          type={metadataMap[lowerCase(name)]?.type || "text"}
-                        ></Metadata>
-                      ))}
-                    </div>
-                  </div>
+                  <Metadata
+                    frontmatter={frontmatter}
+                    metadataMap={metadataMap}
+                  />
                 )}
               <div
                 ref={contentRef}

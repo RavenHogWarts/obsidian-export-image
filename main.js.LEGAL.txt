@@ -97,16 +97,6 @@ jszip/dist/jszip.min.js:
   https://github.com/nodeca/pako/blob/main/LICENSE
   */
 
-lodash/lodash.js:
-  /**
-   * @license
-   * Lodash <https://lodash.com/>
-   * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
-   * Released under MIT license <https://lodash.com/license>
-   * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-   * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-   */
-
 react/cjs/react-jsx-runtime.production.js:
   /**
    * @license React
@@ -293,4 +283,116 @@ jspdf/dist/jspdf.es.min.js:
    *
    * Licensed under the MIT License.
    * http://opensource.org/licenses/mit-license
+   */
+
+lucide-react/dist/esm/shared/src/utils.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/defaultAttributes.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/Icon.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/createLucideIcon.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/icons/binary.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/icons/calendar.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/icons/clock.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/icons/forward.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/icons/list.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/icons/square-check-big.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/icons/tags.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/icons/text-align-start.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/icons/x.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   */
+
+lucide-react/dist/esm/lucide-react.js:
+  /**
+   * @license lucide-react v0.562.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
    */

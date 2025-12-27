@@ -50,6 +50,7 @@
     "jspdf": "^2.5.2",
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.562.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-zoom-pan-pinch": "^3.6.1",

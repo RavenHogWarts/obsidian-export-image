@@ -1,283 +1,267 @@
-import { type FC, type JSX } from "react";
+import {
+  Binary,
+  Calendar,
+  CheckSquare,
+  Clock,
+  Forward,
+  List,
+  Tags,
+  Text,
+  X,
+  type LucideProps,
+} from "lucide-react";
+import type { FrontMatterCache } from "obsidian";
+import { type FC, type ReactNode } from "react";
 
-type PropType = { name: string } & (
-  | {
-      type: "text" | "date" | "datetime";
-      value: string | undefined;
-    }
-  | {
-      type: "number";
-      value: number | undefined;
-    }
-  | {
-      type: "checkbox";
-      value: boolean;
-    }
-  | {
-      type: "tags" | "multitext" | "aliases";
-      value: string[] | undefined;
-    }
-);
+interface MetadataProps {
+  frontmatter: FrontMatterCache;
+  metadataMap: Record<string, { type: MetadataType }>;
+}
 
-const iconMap: Record<MetadataType, JSX.Element> = {
-  text: (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      className="svg-icon"
-    >
-      <path d="M17 6.1H3"></path>
-      <path d="M21 12.1H3"></path>
-      <path d="M15.1 18H3"></path>
-    </svg>
-  ),
-  number: (
-    <svg
-      className="svg-icon"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <rect x="14" y="14" width="4" height="6" rx="2" />
-      <rect x="6" y="4" width="4" height="6" rx="2" />
-      <path d="M6 20h4" />
-      <path d="M14 10h4" />
-      <path d="M6 14h2v6" />
-      <path d="M14 4h2v6" />
-    </svg>
-  ),
-  multitext: (
-    <svg
-      className="svg-icon"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <line x1="8" x2="21" y1="6" y2="6" />
-      <line x1="8" x2="21" y1="12" y2="12" />
-      <line x1="8" x2="21" y1="18" y2="18" />
-      <line x1="3" x2="3.01" y1="6" y2="6" />
-      <line x1="3" x2="3.01" y1="12" y2="12" />
-      <line x1="3" x2="3.01" y1="18" y2="18" />
-    </svg>
-  ),
-  tags: (
-    <svg
-      className="svg-icon"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19" />
-      <path d="M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z" />
-      <circle cx="6.5" cy="9.5" r=".5" fill="currentColor" />
-    </svg>
-  ),
-  date: (
-    <svg
-      className="svg-icon"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path d="M8 2v4" />
-      <path d="M16 2v4" />
-      <rect width="18" height="18" x="3" y="4" rx="2" />
-      <path d="M3 10h18" />
-    </svg>
-  ),
-  datetime: (
-    <svg
-      className="svg-icon"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" />
-      <path d="M16 2v4" />
-      <path d="M8 2v4" />
-      <path d="M3 10h5" />
-      <path d="M17.5 17.5 16 16.3V14" />
-      <circle cx="16" cy="16" r="6" />
-    </svg>
-  ),
-  checkbox: (
-    <svg
-      className="svg-icon"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path d="m9 11 3 3L22 4" />
-      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-    </svg>
-  ),
-  aliases: (
-    <svg
-      className="svg-icon"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <polyline points="15 17 20 12 15 7" />
-      <path d="M4 18v-2a4 4 0 0 1 4-4h12" />
-    </svg>
-  ),
+// 通用图标 props - 匹配 Obsidian 的 SVG 属性
+const iconProps: LucideProps = {
+  size: 24,
+  strokeWidth: 2,
+  className: "svg-icon",
 };
 
-const Metadata: FC<PropType> = ({ type, name, value }) => {
-  if (["cssclasses"].contains(name)) {
-    return null;
+// 图标映射 - 使用与 Obsidian 一致的 lucide 图标
+const iconMap: Record<MetadataType, ReactNode> = {
+  text: <Text {...iconProps} className="svg-icon lucide-text" />,
+  number: <Binary {...iconProps} className="svg-icon lucide-binary" />,
+  multitext: <List {...iconProps} className="svg-icon lucide-list" />,
+  tags: <Tags {...iconProps} className="svg-icon lucide-tags" />,
+  date: <Calendar {...iconProps} className="svg-icon lucide-calendar" />,
+  datetime: <Clock {...iconProps} className="svg-icon lucide-clock" />,
+  checkbox: (
+    <CheckSquare {...iconProps} className="svg-icon lucide-check-square" />
+  ),
+  aliases: <Forward {...iconProps} className="svg-icon lucide-forward" />,
+};
+
+/**
+ * 推断属性类型
+ */
+function inferType(
+  name: string,
+  value: unknown,
+  metadataMap: Record<string, { type: MetadataType }>
+): MetadataType {
+  // 优先使用 metadataMap 中的类型定义
+  const lowerName = name.toLowerCase();
+  if (metadataMap[lowerName]?.type) {
+    return metadataMap[lowerName].type;
   }
 
-  if (value === null) {
-    return null;
+  // 特殊属性名
+  if (name === "tags") return "tags";
+  if (name === "aliases") return "aliases";
+  if (name === "cssclasses" || name === "cssclass") return "multitext";
+
+  // 根据值类型推断
+  if (typeof value === "boolean") return "checkbox";
+  if (typeof value === "number") return "number";
+  if (Array.isArray(value)) return "multitext";
+  if (typeof value === "string") {
+    // 检查是否是日期格式
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return "date";
+    if (/^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}/.test(value)) return "datetime";
   }
 
-  const iconSvg = iconMap[type] || iconMap.text;
-  let valueElement: string | number | JSX.Element;
+  return "text";
+}
+
+/**
+ * 渲染单个属性值 - 完全复刻 Obsidian 原生结构
+ */
+const PropertyValue: FC<{
+  type: MetadataType;
+  value: unknown;
+}> = ({ type, value }) => {
   switch (type) {
-    case "text": {
-      if (!value) {
-        return null;
-      }
-
-      let content = value;
-      if (typeof value === "string") {
-        const match = /^\[\[(.+)]]$/.exec(value);
-        if (match) {
-          content = match[1];
-        }
-      } else {
-        content = JSON.stringify(value);
-      }
-
-      valueElement = (
-        <div className="metadata-input-longtext mod-truncate">{content}</div>
+    case "checkbox":
+      return (
+        <div className="metadata-property-value" data-property-type="checkbox">
+          <input
+            className="metadata-input-checkbox"
+            type="checkbox"
+            checked={Boolean(value)}
+            data-indeterminate="false"
+            readOnly
+          />
+        </div>
       );
-      break;
-    }
 
-    case "number": {
-      valueElement = (
-        <input
-          className="metadata-input metadata-input-number"
-          type="number"
-          value={value}
-        />
+    case "number":
+      return (
+        <div className="metadata-property-value" data-property-type="number">
+          <input
+            className="metadata-input metadata-input-number"
+            inputMode="decimal"
+            step="any"
+            type="number"
+            value={value !== null && value !== undefined ? Number(value) : ""}
+            readOnly
+          />
+        </div>
       );
-      break;
-    }
 
-    case "checkbox": {
-      valueElement = (
-        <input
-          className="metadata-input-checkbox"
-          type="checkbox"
-          checked={value}
-        />
+    case "date":
+      return (
+        <div className="metadata-property-value" data-property-type="date">
+          <input
+            className="metadata-input metadata-input-text mod-date"
+            max="9999-12-31"
+            type="date"
+            value={String(value ?? "")}
+          />
+        </div>
       );
-      break;
-    }
 
-    case "date": {
-      valueElement = (
-        <div className="metadata-input-longtext mod-truncate">{value}</div>
+    case "datetime":
+      return (
+        <div className="metadata-property-value" data-property-type="datetime">
+          <input
+            className="metadata-input metadata-input-text mod-datetime"
+            max="9999-12-31T23:59"
+            type="datetime-local"
+            value={String(value ?? "")}
+          />
+        </div>
       );
-      break;
-    }
 
-    case "datetime": {
-      valueElement = (
-        <div className="metadata-input-longtext mod-truncate">{value}</div>
+    case "tags": {
+      const items = Array.isArray(value) ? value : value ? [value] : [];
+      return (
+        <div className="metadata-property-value" data-property-type="tags">
+          <div className="multi-select-container">
+            {items.map((item, index) => (
+              <div className="multi-select-pill" key={index}>
+                <div className="multi-select-pill-content">
+                  <span>{String(item)}</span>
+                </div>
+                <div className="multi-select-pill-remove-button">
+                  <X {...iconProps} className="svg-icon lucide-x" />
+                </div>
+              </div>
+            ))}
+            <div
+              className="multi-select-input"
+              contentEditable="true"
+              autoCapitalize="none"
+            ></div>
+          </div>
+        </div>
       );
-      break;
     }
 
     case "multitext":
-    case "tags":
     case "aliases": {
-      const valueArray = Array.isArray(value) ? value : [value];
-      valueElement = (
-        <div className="multi-select-container">
-          {valueArray.map((str) => (
-            <div className="multi-select-pill" style={{ border: "none" }}>
-              <div className="multi-select-pill-content">
-                <span>{str}</span>
+      const items = Array.isArray(value) ? value : value ? [value] : [];
+      return (
+        <div className="metadata-property-value" data-property-type={type}>
+          <div className="multi-select-container">
+            {items.map((item, index) => (
+              <div className="multi-select-pill" key={index}>
+                <div className="multi-select-pill-content">{String(item)}</div>
+                <div className="multi-select-pill-remove-button">
+                  <X {...iconProps} className="svg-icon lucide-x" />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+            <div className="multi-select-input" contentEditable="true"></div>
+          </div>
         </div>
       );
-      break;
     }
 
+    case "text":
     default: {
-      return null;
+      let content = "";
+      if (value !== null && value !== undefined) {
+        if (typeof value === "string") {
+          // 处理 [[link]] 格式
+          const match = /^\[\[(.+)]]$/.exec(value);
+          content = match ? match[1] : value;
+        } else if (typeof value === "object") {
+          content = JSON.stringify(value);
+        } else {
+          content = String(value);
+        }
+      }
+      return (
+        <div className="metadata-property-value" data-property-type="text">
+          <div
+            className="metadata-input-longtext"
+            contentEditable="true"
+            spellCheck="true"
+          >
+            {content}
+          </div>
+        </div>
+      );
     }
+  }
+};
+
+/**
+ * Metadata 组件 - 完全复刻 Obsidian 原生的 metadata 属性视图结构
+ */
+const Metadata: FC<MetadataProps> = ({ frontmatter, metadataMap }) => {
+  // 过滤掉内部属性
+  const properties = Object.entries(frontmatter).filter(
+    ([key]) => key !== "position"
+  );
+
+  // 跳过空的 frontmatter 或只有 cssclasses 的情况
+  const displayableProperties = properties.filter(
+    ([key]) => key !== "cssclasses" && key !== "cssclass"
+  );
+
+  if (displayableProperties.length === 0) {
+    return null;
   }
 
   return (
     <div
-      className="metadata-property"
-      data-property-type={type}
-      data-property-key={name}
-      style={{ border: 0 }}
+      className="metadata-container"
+      data-property-count={displayableProperties.length}
     >
-      <div className="metadata-property-key">
-        <span className="metadata-property-icon">{iconSvg}</span>
-        <span className="metadata-property-name">{name}</span>
+      <div className="metadata-content">
+        <div className="metadata-properties">
+          {displayableProperties.map(([name, value]) => {
+            const type = inferType(name, value, metadataMap);
+            const icon = iconMap[type] || iconMap.text;
+
+            return (
+              <div
+                className="metadata-property"
+                key={name}
+                data-property-key={name}
+              >
+                <div className="metadata-property-key">
+                  <span
+                    className="metadata-property-icon"
+                    aria-disabled="false"
+                  >
+                    {icon}
+                  </span>
+                  <input
+                    className="metadata-property-key-input"
+                    autoCapitalize="none"
+                    enterKeyHint="next"
+                    type="text"
+                    aria-label={name}
+                    value={name}
+                    readOnly
+                  />
+                </div>
+                <PropertyValue type={type} value={value} />
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <div className="metadata-property-value">{valueElement}</div>
     </div>
   );
 };
