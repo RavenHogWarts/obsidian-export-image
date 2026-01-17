@@ -136,22 +136,7 @@ const Target = forwardRef<
       [scale]
     );
 
-    useEffect(() => {
-      if (!contentRef.current) {
-        return;
-      }
-      contentRef.current.innerHTML = "";
-      Array.from(markdownEl.childNodes).forEach((child) => {
-        if (child.nodeType === Node.TEXT_NODE) {
-          if (child.textContent) {
-            contentRef.current?.append(child.textContent);
-          }
-        } else {
-          contentRef.current?.append(child.cloneNode(true));
-        }
-      });
-    }, [markdownEl]);
-
+    // 将 clip 控制函数暴露给父组件（用于截图时裁剪）
     useImperativeHandle(
       ref,
       () => ({
@@ -172,6 +157,79 @@ const Target = forwardRef<
       }),
       [clipRef.current, rootRef.current]
     );
+
+    // 监控 markdownEl 的变更并实时复制到 contentRef，防抖并监听图片加载以触发高度更新
+    useEffect(() => {
+      if (!contentRef.current) return;
+
+      let timer: number | null = null;
+      let imgListeners: { img: HTMLImageElement; handler: () => void }[] = [];
+
+      const copyContent = () => {
+        if (!contentRef.current) return;
+        contentRef.current.innerHTML = "";
+        Array.from(markdownEl.childNodes).forEach((child) => {
+          if (child.nodeType === Node.TEXT_NODE) {
+            if (child.textContent) contentRef.current?.append(child.textContent);
+          } else {
+            contentRef.current?.append(child.cloneNode(true));
+          }
+        });
+
+        // 清理旧监听
+        imgListeners.forEach(({ img, handler }) => img.removeEventListener("load", handler));
+        imgListeners = [];
+
+        // 监听新图片
+        const imgs = Array.from(contentRef.current.querySelectorAll("img")) as HTMLImageElement[];
+        imgs.forEach((img) => {
+          const handler = () => {
+            if (rootRef.current) setRootHeight(rootRef.current.clientHeight);
+          };
+          if (!img.complete) {
+            img.addEventListener("load", handler);
+            imgListeners.push({ img, handler });
+          }
+        });
+
+        requestAnimationFrame(() => {
+          if (rootRef.current) setRootHeight(rootRef.current.clientHeight);
+        });
+      };
+
+      const scheduleCopy = () => {
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          copyContent();
+          timer = null;
+        }, 80);
+      };
+
+      // 首次复制
+      copyContent();
+
+      // 监听变更
+      let observer: MutationObserver | null = null;
+      try {
+        observer = new MutationObserver(() => scheduleCopy());
+        if (markdownEl && (markdownEl.nodeType === Node.ELEMENT_NODE || markdownEl.nodeType === Node.DOCUMENT_FRAGMENT_NODE)) {
+          observer.observe(markdownEl as Node, {
+            subtree: true,
+            childList: true,
+            attributes: true,
+            characterData: true,
+          });
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      return () => {
+        if (timer) window.clearTimeout(timer);
+        if (observer) observer.disconnect();
+        imgListeners.forEach(({ img, handler }) => img.removeEventListener("load", handler));
+      };
+    }, [markdownEl]);
 
     useEffect(() => {
       (async () => {
