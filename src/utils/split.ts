@@ -8,11 +8,21 @@ interface SplitOptions {
   height: number;
   overlap: number;
   totalHeight: number;
+  margin?: number;
+  threshold?: number;
+  authorHeight?: number;
+  container?: HTMLElement;
 }
 
 interface ElementMeasure {
   top: number;
   height: number;
+}
+
+interface BoundaryPoint {
+  position: number;
+  type: "heading" | "paragraph" | "list-item";
+  priority: number;
 }
 
 /**
@@ -65,6 +75,66 @@ export function getElementMeasures(
     });
   }
   return [];
+}
+
+/**
+ * 获取元素相对于容器的顶部位置
+ */
+function getElementTop(element: HTMLElement, container: HTMLElement): number {
+  const rect = element.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+  return rect.top - containerRect.top;
+}
+
+/**
+ * 识别智能拆分的边界点
+ * @param container 容器元素
+ * @returns 边界点数组
+ */
+export function findBoundaryPoints(container: HTMLElement): BoundaryPoint[] {
+  const points: BoundaryPoint[] = [];
+
+  // 1. 标题前 (priority: 1) - h1-h6
+  const headings = container.querySelectorAll("h1, h2, h3, h4, h5, h6");
+  headings.forEach((heading) => {
+    const position = getElementTop(heading as HTMLElement, container);
+    points.push({
+      position,
+      type: "heading",
+      priority: 1,
+    });
+  });
+
+  // 2. 段落边界 (priority: 2) - .export-image-markdown > div 的子元素之间
+  const markdownContainer = container.querySelector(".export-image-markdown>div");
+  if (markdownContainer) {
+    const children = Array.from(markdownContainer.children);
+    for (let i = 1; i < children.length; i++) {
+      const position = getElementTop(children[i] as HTMLElement, container);
+      points.push({
+        position,
+        type: "paragraph",
+        priority: 2,
+      });
+    }
+  }
+
+  // 3. 列表项之间 (priority: 3) - li 元素之间
+  const lists = container.querySelectorAll("ol, ul");
+  lists.forEach((list) => {
+    const items = list.querySelectorAll("li");
+    for (let i = 1; i < items.length; i++) {
+      const position = getElementTop(items[i] as HTMLElement, container);
+      points.push({
+        position,
+        type: "list-item",
+        priority: 3,
+      });
+    }
+  });
+
+  // 按位置排序
+  return points.sort((a, b) => a.position - b.position);
 }
 
 /**
@@ -124,30 +194,67 @@ export function calculateSplitPositions(
       });
     }
   } else {
-    // 固定高度模式
-    // 计算最小分割高度：重叠高度 + 50px
-    const minSplitHeight = 2 * overlap + 50;
-    // 使用设置的高度和最小高度中的较大值
-    const effectiveHeight = Math.max(height, minSplitHeight);
-    const firstPageHeight = effectiveHeight;
-    const remainingHeight = totalHeight - firstPageHeight;
-    const additionalPages = Math.max(
-      0,
-      Math.ceil(remainingHeight / (effectiveHeight - overlap * 2))
-    );
+    // 智能固定高度模式
+    const margin = options.margin ?? 40;
+    const threshold = options.threshold ?? 60;
+    const authorHeight = options.authorHeight ?? 0;
 
-    // 第一页
-    positions.push({ startY: 0, height: firstPageHeight });
-    let lastY = firstPageHeight;
-    // 后续页面
-    for (let i = 1; i <= additionalPages; i++) {
-      const startY = lastY - overlap;
-      const pageHeight =
-        i === additionalPages
-          ? totalHeight - startY // 最后一页：使用实际剩余高度
-          : effectiveHeight; // 其他页：使用设定的分割高度
-      positions.push({ startY, height: pageHeight });
-      lastY = startY + pageHeight;
+    // 计算内容高度（扣除作者信息）
+    const contentHeight = Math.max(0, totalHeight - authorHeight);
+    // 可用内容高度
+    const availableHeight = Math.max(height - margin * 2, 100);
+
+    // 识别所有边界点
+    const boundaries = options.container ? findBoundaryPoints(options.container) : [];
+
+    // 从上到下累积内容并拆分
+    let currentY = 0;
+    let boundaryIndex = 0;
+
+    while (currentY < contentHeight) {
+      const targetEndY = currentY + availableHeight;
+
+      // 找到当前范围内最接近目标高度的边界点
+      let bestBoundary: BoundaryPoint | null = null;
+      while (boundaryIndex < boundaries.length) {
+        const b = boundaries[boundaryIndex];
+        if (b.position > targetEndY + threshold) break;
+        if (b.position > currentY && b.position <= targetEndY) {
+          bestBoundary = b;
+        }
+        boundaryIndex++;
+      }
+
+      // 决策拆分位置
+      let splitY: number;
+      if (bestBoundary && targetEndY - bestBoundary.position <= threshold) {
+        // 边界接近目标高度，在边界处截断
+        splitY = bestBoundary.position;
+      } else if (bestBoundary) {
+        // 边界较远，但仍然在范围内，尽可能填充到边界
+        splitY = bestBoundary.position;
+      } else {
+        // 没有合适的边界点，尽可能填充到目标高度
+        splitY = Math.min(targetEndY, contentHeight);
+      }
+
+      // 添加拆分位置
+      const pageHeight = Math.min(splitY - currentY + margin * 2, height);
+      positions.push({
+        startY: currentY,
+        height: pageHeight,
+      });
+
+      currentY = splitY;
+
+      // 防止无限循环
+      if (pageHeight <= 0) break;
+    }
+
+    // 最后一页加上作者信息
+    if (positions.length > 0 && authorHeight > 0) {
+      const lastPage = positions[positions.length - 1];
+      lastPage.height += authorHeight;
     }
   }
   return positions;

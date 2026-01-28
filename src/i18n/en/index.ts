@@ -64,7 +64,17 @@ const en = {
       overlap: {
         label: "Split image overlap",
         description:
-          "Set the overlap between adjacent split images to prevent content from being cut off. The default is 40px.",
+          "Set the overlap between adjacent split images to prevent content from being cut off. The default is 40px. (Not used in smart mode)",
+      },
+      margin: {
+        label: "Split margin",
+        description:
+          "Set the top and bottom margin for each split image in pixels. The default is 40px.",
+      },
+      threshold: {
+        label: "Split threshold",
+        description:
+          "Set the threshold for whether to leave whitespace to keep paragraphs intact. When the distance between the next paragraph boundary and the target height is less than this value, the split will occur at the boundary. The default is 60px.",
       },
     },
     filename: {

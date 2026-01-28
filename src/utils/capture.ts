@@ -165,6 +165,8 @@ export async function saveMultipleFiles(
       split.height,
       split.overlap,
       split.mode,
+      split.margin ?? 40,
+      split.threshold ?? 60,
       app,
       file.basename
     );
@@ -206,10 +208,16 @@ export async function saveAll(
   splitHeight: number,
   splitOverlap: number,
   splitMode: SplitMode,
+  splitMargin: number,
+  splitThreshold: number,
   app: App,
   title: string
 ) {
   try {
+    // 计算作者信息高度
+    const authorInfo = target.element.querySelector('.user-info-container');
+    const authorHeight = authorInfo?.clientHeight || 0;
+
     // 计算需要分割的页数和位置
     const totalHeight = target.contentElement.clientHeight;
     const elements = getElementMeasures(target.contentElement, splitMode);
@@ -220,6 +228,10 @@ export async function saveAll(
         height: splitHeight,
         overlap: splitOverlap,
         totalHeight,
+        margin: splitMargin,
+        threshold: splitThreshold,
+        authorHeight,
+        container: target.contentElement,
       },
       elements
     );
@@ -228,7 +240,16 @@ export async function saveAll(
       // PDF 格式：创建多页 PDF
       let pdf: JsPdf | undefined;
 
-      for (const { startY, height } of splitPositions) {
+      for (let i = 0; i < splitPositions.length; i++) {
+        const { startY, height } = splitPositions[i];
+        const isLastPage = i === splitPositions.length - 1;
+
+        // 临时隐藏作者信息（非最后一页）
+        const originalDisplay = authorInfo?.style.display;
+        if (!isLastPage && authorInfo) {
+          authorInfo.style.display = 'none';
+        }
+
         // 设置裁剪区域
         target.setClip(startY, height);
         await delay(20); // 等待渲染
@@ -262,6 +283,11 @@ export async function saveAll(
           target.element.clientWidth / 96,
           height / 96
         );
+
+        // 恢复作者信息显示
+        if (!isLastPage && authorInfo && originalDisplay !== undefined) {
+          authorInfo.style.display = originalDisplay;
+        }
       }
 
       const filename = `${title.replaceAll(/\s+/g, "_")}.pdf`;
@@ -283,6 +309,14 @@ export async function saveAll(
 
       for (let i = 0; i < splitPositions.length; i++) {
         const { startY, height } = splitPositions[i];
+        const isLastPage = i === splitPositions.length - 1;
+
+        // 临时隐藏作者信息（非最后一页）
+        const originalDisplay = authorInfo?.style.display;
+        if (!isLastPage && authorInfo) {
+          authorInfo.style.display = 'none';
+        }
+
         // 设置裁剪区域
         target.setClip(startY, height);
         await delay(20); // 等待渲染
@@ -294,6 +328,11 @@ export async function saveAll(
         );
         const filename = `${title.replaceAll(/\s+/g, "_")}_${i + 1}.${ext}`;
         blobs.push({ blob, filename });
+
+        // 恢复作者信息显示
+        if (!isLastPage && authorInfo && originalDisplay !== undefined) {
+          authorInfo.style.display = originalDisplay;
+        }
       }
 
       if (Platform.isMobile) {

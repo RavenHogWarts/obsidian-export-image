@@ -81,7 +81,23 @@ export const createSettingSchema = async (
       path: "split.overlap",
       type: "number",
       desc: L.setting.split.overlap.description(),
-      when: (settings) => settings.split.mode === "fixed",
+      when: (settings) => false, // 智能模式下不再使用 overlap
+    },
+    {
+      label: L.setting.split.margin.label(),
+      path: "split.margin",
+      type: "number",
+      desc: L.setting.split.margin.description(),
+      when: (settings) =>
+        settings.split.mode === "fixed",
+    },
+    {
+      label: L.setting.split.threshold.label(),
+      path: "split.threshold",
+      type: "number",
+      desc: L.setting.split.threshold.description(),
+      when: (settings) =>
+        settings.split.mode === "fixed",
     },
     // 显示设置
     {

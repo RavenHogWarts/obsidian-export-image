@@ -167,6 +167,20 @@ const ModalContent: FC<{
         desc: L.setting.split.overlap.description(),
         label: L.setting.split.overlap.label(),
         type: "number",
+        when: (settings) => false, // 智能模式下不再使用 overlap
+      },
+      {
+        path: "split.margin",
+        desc: L.setting.split.margin.description(),
+        label: L.setting.split.margin.label(),
+        type: "number",
+        when: (settings) => settings.split.mode === "fixed",
+      },
+      {
+        path: "split.threshold",
+        desc: L.setting.split.threshold.description(),
+        label: L.setting.split.threshold.label(),
+        type: "number",
         when: (settings) => settings.split.mode === "fixed",
       },
       {
@@ -443,6 +457,8 @@ const ModalContent: FC<{
         formData.split.height,
         formData.split.overlap,
         formData.split.mode,
+        formData.split.margin ?? 40,
+        formData.split.threshold ?? 60,
         app,
         title
       );

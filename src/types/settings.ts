@@ -45,6 +45,8 @@ export const DEFAULT_SETTINGS: ISettings = {
     height: 1000,
     overlap: 80,
     mode: "none" as SplitMode,
+    margin: 40,
+    threshold: 60,
   },
   customCSS: {
     enable: false,

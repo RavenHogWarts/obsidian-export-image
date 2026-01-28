@@ -51,6 +51,8 @@ declare type ISettings = {
     height: number;
     overlap: number;
     mode: SplitMode;
+    margin: number;
+    threshold: number;
   };
   customCSS: {
     enable: boolean;
