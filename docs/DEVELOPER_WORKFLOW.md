@@ -44,8 +44,10 @@ pnpm install
 创建 `.env` 文件并添加你的 Obsidian Vault 路径：
 
 ```env
-VAULT_PATH=/path/to/your/vault/.obsidian/plugins/obsidian-export-image-fork
+VAULT_PATH=/path/to/your/vault
 ```
+
+（指向 .obsidian 目录所在的 Vault 根目录）
 
 这样可以使用 `pnpm run build:local` 自动将构建产物复制到 Vault。
 
