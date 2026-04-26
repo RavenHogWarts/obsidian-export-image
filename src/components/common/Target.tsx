@@ -183,7 +183,14 @@ const Target = forwardRef<
 
       return (
         <div
-          className="user-info-container"
+          className={clsx(
+            "user-info-container",
+            position === "top"
+              ? "export-image-header-info"
+              : "export-image-footer-info",
+          )}
+          data-author-info-position={position}
+          data-author-info-slot={position}
           style={{
             [position === "top" ? "borderBottom" : "borderTop"]:
               "1px solid var(--background-modifier-border)",
