@@ -10,7 +10,7 @@ import { getCSSFiles, type CSSFileInfo } from "src/utils/cssLoader";
  */
 export const createSettingSchema = async (
   app: App,
-  plugin: ExportImagePlugin
+  plugin: ExportImagePlugin,
 ): Promise<FormSchema<ISettings>> => {
   // 获取 CSS 文件列表
   let cssFiles: CSSFileInfo[] = [];
@@ -152,35 +152,6 @@ export const createSettingSchema = async (
       type: "boolean",
     },
     {
-      label: L.setting.userInfo.name(),
-      path: "authorInfo.name",
-      type: "string",
-      when: (settings) => settings.authorInfo.show,
-    },
-    {
-      label: L.setting.userInfo.remark(),
-      path: "authorInfo.remark",
-      type: "string",
-      when: (settings) => settings.authorInfo.show,
-    },
-    {
-      label: L.setting.userInfo.avatar.title(),
-      path: "authorInfo.avatar",
-      type: "file",
-      desc: L.setting.userInfo.avatar.description(),
-      when: (settings) => settings.authorInfo.show,
-    },
-    {
-      label: L.setting.userInfo.position(),
-      path: "authorInfo.position",
-      type: "select",
-      options: [
-        { value: "top", text: "Top" },
-        { value: "bottom", text: "Bottom" },
-      ],
-      when: (settings) => settings.authorInfo.show,
-    },
-    {
       label: L.setting.userInfo.align(),
       path: "authorInfo.align",
       type: "select",
@@ -190,6 +161,62 @@ export const createSettingSchema = async (
         { value: "right", text: "Right" },
       ],
       when: (settings) => settings.authorInfo.show,
+    },
+    {
+      label: "Show top author info",
+      path: "authorInfo.showTop",
+      type: "boolean",
+      when: (settings) => settings.authorInfo.show,
+    },
+    {
+      label: "Top name",
+      path: "authorInfo.topName",
+      type: "string",
+      when: (settings) =>
+        settings.authorInfo.show && Boolean(settings.authorInfo.showTop),
+    },
+    {
+      label: "Top remark",
+      path: "authorInfo.topRemark",
+      type: "string",
+      when: (settings) =>
+        settings.authorInfo.show && Boolean(settings.authorInfo.showTop),
+    },
+    {
+      label: "Top avatar",
+      path: "authorInfo.topAvatar",
+      type: "file",
+      desc: L.setting.userInfo.avatar.description(),
+      when: (settings) =>
+        settings.authorInfo.show && Boolean(settings.authorInfo.showTop),
+    },
+    {
+      label: "Show bottom author info",
+      path: "authorInfo.showBottom",
+      type: "boolean",
+      when: (settings) => settings.authorInfo.show,
+    },
+    {
+      label: "Bottom name",
+      path: "authorInfo.bottomName",
+      type: "string",
+      when: (settings) =>
+        settings.authorInfo.show && Boolean(settings.authorInfo.showBottom),
+    },
+    {
+      label: "Bottom remark",
+      path: "authorInfo.bottomRemark",
+      type: "string",
+      when: (settings) =>
+        settings.authorInfo.show && Boolean(settings.authorInfo.showBottom),
+    },
+    {
+      label: "Bottom avatar",
+      path: "authorInfo.bottomAvatar",
+      type: "file",
+      desc: L.setting.userInfo.avatar.description(),
+      when: (settings) =>
+        settings.authorInfo.show && Boolean(settings.authorInfo.showBottom),
     },
     // 水印设置
     {

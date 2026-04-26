@@ -54,7 +54,7 @@ const Target = forwardRef<
       onSplitChange,
       customCSS,
     },
-    ref
+    ref,
   ) => {
     const [watermarkProps, setWatermarkProps] = useState<WatermarkProps>({});
     const contentRef = useRef<HTMLDivElement>(null);
@@ -108,7 +108,7 @@ const Target = forwardRef<
           overlap: setting.split.overlap,
           totalHeight: rootHeight,
         },
-        elements
+        elements,
       );
 
       // 通知父组件分页变化
@@ -132,9 +132,87 @@ const Target = forwardRef<
           borderTop: `${2 / scale}px dashed var(--interactive-accent)`,
           opacity: 0.7,
           pointerEvents: "none",
-        } as const),
-      [scale]
+        }) as const,
+      [scale],
     );
+
+    const topAuthorInfo = useMemo(() => {
+      const isLegacyTop = setting.authorInfo.position === "top";
+      const show =
+        setting.authorInfo.show && (setting.authorInfo.showTop ?? isLegacyTop);
+      return {
+        show,
+        avatar:
+          setting.authorInfo.topAvatar ??
+          (isLegacyTop ? setting.authorInfo.avatar : undefined),
+        name:
+          setting.authorInfo.topName ??
+          (isLegacyTop ? setting.authorInfo.name : undefined),
+        remark:
+          setting.authorInfo.topRemark ??
+          (isLegacyTop ? setting.authorInfo.remark : undefined),
+      };
+    }, [setting.authorInfo]);
+
+    const bottomAuthorInfo = useMemo(() => {
+      const isLegacyBottom = setting.authorInfo.position !== "top";
+      const show =
+        setting.authorInfo.show &&
+        (setting.authorInfo.showBottom ?? isLegacyBottom);
+      return {
+        show,
+        avatar:
+          setting.authorInfo.bottomAvatar ??
+          (isLegacyBottom ? setting.authorInfo.avatar : undefined),
+        name:
+          setting.authorInfo.bottomName ??
+          (isLegacyBottom ? setting.authorInfo.name : undefined),
+        remark:
+          setting.authorInfo.bottomRemark ??
+          (isLegacyBottom ? setting.authorInfo.remark : undefined),
+      };
+    }, [setting.authorInfo]);
+
+    const renderAuthorInfo = (
+      data: { show: boolean; avatar?: string; name?: string; remark?: string },
+      position: "top" | "bottom",
+    ) => {
+      if (!data.show || (!data.avatar && !data.name)) {
+        return null;
+      }
+
+      return (
+        <div
+          className="user-info-container"
+          style={{
+            [position === "top" ? "borderBottom" : "borderTop"]:
+              "1px solid var(--background-modifier-border)",
+            justifyContent: alignMap[setting.authorInfo.align || "right"],
+            background:
+              setting.format === "png1" ? "unset" : "var(--background-primary)",
+          }}
+        >
+          {data.avatar && (
+            <div
+              className="user-info-avatar"
+              style={{
+                backgroundImage: `url(${data.avatar})`,
+              }}
+            ></div>
+          )}
+          {data.name && (
+            <div>
+              <div className="user-info-name">{data.name}</div>
+              {data.remark && (
+                <div className="user-info-remark">
+                  {processObTemplate(data.remark)}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    };
 
     // 将 clip 控制函数暴露给父组件（用于截图时裁剪）
     useImperativeHandle(
@@ -155,7 +233,7 @@ const Target = forwardRef<
           rootRef.current.style.transform = "";
         },
       }),
-      [clipRef.current, rootRef.current]
+      [clipRef.current, rootRef.current],
     );
 
     // 监控 markdownEl 的变更并实时复制到 contentRef，防抖并监听图片加载以触发高度更新
@@ -170,18 +248,23 @@ const Target = forwardRef<
         contentRef.current.innerHTML = "";
         Array.from(markdownEl.childNodes).forEach((child) => {
           if (child.nodeType === Node.TEXT_NODE) {
-            if (child.textContent) contentRef.current?.append(child.textContent);
+            if (child.textContent)
+              contentRef.current?.append(child.textContent);
           } else {
             contentRef.current?.append(child.cloneNode(true));
           }
         });
 
         // 清理旧监听
-        imgListeners.forEach(({ img, handler }) => img.removeEventListener("load", handler));
+        imgListeners.forEach(({ img, handler }) =>
+          img.removeEventListener("load", handler),
+        );
         imgListeners = [];
 
         // 监听新图片
-        const imgs = Array.from(contentRef.current.querySelectorAll("img")) as HTMLImageElement[];
+        const imgs = Array.from(
+          contentRef.current.querySelectorAll("img"),
+        ) as HTMLImageElement[];
         imgs.forEach((img) => {
           const handler = () => {
             if (rootRef.current) setRootHeight(rootRef.current.clientHeight);
@@ -212,7 +295,11 @@ const Target = forwardRef<
       let observer: MutationObserver | null = null;
       try {
         observer = new MutationObserver(() => scheduleCopy());
-        if (markdownEl && (markdownEl.nodeType === Node.ELEMENT_NODE || markdownEl.nodeType === Node.DOCUMENT_FRAGMENT_NODE)) {
+        if (
+          markdownEl &&
+          (markdownEl.nodeType === Node.ELEMENT_NODE ||
+            markdownEl.nodeType === Node.DOCUMENT_FRAGMENT_NODE)
+        ) {
           observer.observe(markdownEl as Node, {
             subtree: true,
             childList: true,
@@ -227,7 +314,9 @@ const Target = forwardRef<
       return () => {
         if (timer) window.clearTimeout(timer);
         if (observer) observer.disconnect();
-        imgListeners.forEach(({ img, handler }) => img.removeEventListener("load", handler));
+        imgListeners.forEach(({ img, handler }) =>
+          img.removeEventListener("load", handler),
+        );
       };
     }, [markdownEl]);
 
@@ -264,20 +353,18 @@ const Target = forwardRef<
         <div
           className={clsx(
             "export-image-root markdown-reading-view",
-            frontmatter?.cssclasses || frontmatter?.cssclass
+            frontmatter?.cssclasses || frontmatter?.cssclass,
           )}
           ref={rootRef}
           style={{
             display: "flex",
-            flexDirection:
-              setting.authorInfo.position === "bottom"
-                ? "column"
-                : "column-reverse",
+            flexDirection: "column",
             backgroundColor:
               setting.format === "png1" ? "unset" : "var(--background-primary)",
             position: "relative",
           }}
         >
+          {renderAuthorInfo(topAuthorInfo, "top")}
           <Watermark {...watermarkProps}>
             <div
               className="export-image-preview-container"
@@ -306,45 +393,7 @@ const Target = forwardRef<
               ></div>
             </div>
           </Watermark>
-          {setting.authorInfo.show &&
-            (setting.authorInfo.avatar || setting.authorInfo.name) && (
-              <div
-                className="user-info-container"
-                style={{
-                  [setting.authorInfo.position === "top"
-                    ? "borderBottom"
-                    : "borderTop"]:
-                    "1px solid var(--background-modifier-border)",
-
-                  justifyContent: alignMap[setting.authorInfo.align || "right"],
-                  background:
-                    setting.format === "png1"
-                      ? "unset"
-                      : "var(--background-primary)",
-                }}
-              >
-                {setting.authorInfo.avatar && (
-                  <div
-                    className="user-info-avatar"
-                    style={{
-                      backgroundImage: `url(${setting.authorInfo.avatar})`,
-                    }}
-                  ></div>
-                )}
-                {setting.authorInfo.name && (
-                  <div>
-                    <div className="user-info-name">
-                      {setting.authorInfo.name}
-                    </div>
-                    {setting.authorInfo.remark && (
-                      <div className="user-info-remark">
-                        {processObTemplate(setting.authorInfo.remark)}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
+          {renderAuthorInfo(bottomAuthorInfo, "bottom")}
           {!isProcessing &&
             splitLines.map((y, index) => (
               <div
@@ -359,7 +408,7 @@ const Target = forwardRef<
         </div>
       </div>
     );
-  }
+  },
 );
 
 export default Target;

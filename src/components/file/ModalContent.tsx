@@ -59,13 +59,13 @@ const ModalContent: FC<{
 
     window.document.addEventListener(
       "export-image-content-loaded",
-      handleContentLoaded
+      handleContentLoaded,
     );
 
     return () => {
       window.document.removeEventListener(
         "export-image-content-loaded",
-        handleContentLoaded
+        handleContentLoaded,
       );
     };
   }, [markdownEl]);
@@ -175,25 +175,6 @@ const ModalContent: FC<{
         type: "boolean",
       },
       {
-        label: L.setting.userInfo.name(),
-        path: "authorInfo.name",
-        type: "string",
-        when: { flag: true, path: "authorInfo.show" },
-      },
-      {
-        label: L.setting.userInfo.remark(),
-        path: "authorInfo.remark",
-        type: "string",
-        when: { flag: true, path: "authorInfo.show" },
-      },
-      {
-        label: L.setting.userInfo.avatar.title(),
-        desc: L.setting.userInfo.avatar.description(),
-        path: "authorInfo.avatar",
-        type: "file",
-        when: { flag: true, path: "authorInfo.show" },
-      },
-      {
         label: L.setting.userInfo.align(),
         path: "authorInfo.align",
         type: "select",
@@ -205,14 +186,60 @@ const ModalContent: FC<{
         when: { flag: true, path: "authorInfo.show" },
       },
       {
-        label: L.setting.userInfo.position(),
-        path: "authorInfo.position",
-        type: "select",
-        options: [
-          { text: "Top", value: "top" },
-          { text: "Bottom", value: "bottom" },
-        ],
+        label: "Show top author info",
+        path: "authorInfo.showTop",
+        type: "boolean",
         when: { flag: true, path: "authorInfo.show" },
+      },
+      {
+        label: "Top name",
+        path: "authorInfo.topName",
+        type: "string",
+        when: (settings) =>
+          settings.authorInfo.show && Boolean(settings.authorInfo.showTop),
+      },
+      {
+        label: "Top remark",
+        path: "authorInfo.topRemark",
+        type: "string",
+        when: (settings) =>
+          settings.authorInfo.show && Boolean(settings.authorInfo.showTop),
+      },
+      {
+        label: "Top avatar",
+        desc: L.setting.userInfo.avatar.description(),
+        path: "authorInfo.topAvatar",
+        type: "file",
+        when: (settings) =>
+          settings.authorInfo.show && Boolean(settings.authorInfo.showTop),
+      },
+      {
+        label: "Show bottom author info",
+        path: "authorInfo.showBottom",
+        type: "boolean",
+        when: { flag: true, path: "authorInfo.show" },
+      },
+      {
+        label: "Bottom name",
+        path: "authorInfo.bottomName",
+        type: "string",
+        when: (settings) =>
+          settings.authorInfo.show && Boolean(settings.authorInfo.showBottom),
+      },
+      {
+        label: "Bottom remark",
+        path: "authorInfo.bottomRemark",
+        type: "string",
+        when: (settings) =>
+          settings.authorInfo.show && Boolean(settings.authorInfo.showBottom),
+      },
+      {
+        label: "Bottom avatar",
+        desc: L.setting.userInfo.avatar.description(),
+        path: "authorInfo.bottomAvatar",
+        type: "file",
+        when: (settings) =>
+          settings.authorInfo.show && Boolean(settings.authorInfo.showBottom),
       },
       {
         label: L.setting.watermark.enable.label(),
@@ -284,7 +311,7 @@ const ModalContent: FC<{
         when: { flag: true, path: "customCSS.enable" },
       },
     ],
-    [cssFiles]
+    [cssFiles],
   );
 
   const calculateScale = useCallback(() => {
@@ -297,7 +324,7 @@ const ModalContent: FC<{
       Math.min(
         1,
         mainHeight / (contentHeight || 100),
-        previewWidth / ((contentWidth || 0) + 2)
+        previewWidth / ((contentWidth || 0) + 2),
       ) / 2
     );
   }, [mainHeight]);
@@ -399,7 +426,7 @@ const ModalContent: FC<{
         title,
         formData.resolutionMode,
         formData.format,
-        Platform.isMobile
+        Platform.isMobile,
       );
     } catch {
       new Notice(L.saveFail());
@@ -418,7 +445,7 @@ const ModalContent: FC<{
       await copy(
         root.current.contentElement,
         formData.resolutionMode,
-        formData.format
+        formData.format,
       );
     } catch {
       new Notice(L.copyFail());
@@ -444,7 +471,7 @@ const ModalContent: FC<{
         formData.split.overlap,
         formData.split.mode,
         app,
-        title
+        title,
       );
     } catch {
       new Notice(L.copyFail());

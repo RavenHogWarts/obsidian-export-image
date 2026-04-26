@@ -1,13 +1,22 @@
-import { Editor, MarkdownView, Notice, Plugin, TFile, TFolder } from "obsidian";
+import {
+  Editor,
+  MarkdownFileInfo,
+  MarkdownView,
+  Notice,
+  Plugin,
+  TFile,
+  TFolder,
+} from "obsidian";
 import exportImage from "./components/file/exportImage";
 import exportFolder from "./components/folder/exportFolder";
 import L from "./i18n/L";
+import { migrateLegacySettings } from "./settings/migrateSettings";
 import ImageSettingTab from "./settings/SettingsTab";
 import { DEFAULT_SETTINGS } from "./types/settings";
 import { getMetadata, isMarkdownFile } from "./utils";
 
 export default class ExportImagePlugin extends Plugin {
-  settings: ISettings;
+  settings!: ISettings;
 
   async epxortFile(file: TFile) {
     const frontmatter = getMetadata(file, this.app);
@@ -18,7 +27,7 @@ export default class ExportImagePlugin extends Plugin {
       markdown,
       file,
       frontmatter,
-      "file"
+      "file",
     );
   }
 
@@ -46,7 +55,7 @@ export default class ExportImagePlugin extends Plugin {
               });
           });
         }
-      })
+      }),
     );
 
     this.registerEvent(
@@ -72,8 +81,8 @@ export default class ExportImagePlugin extends Plugin {
                   editor.getSelection(),
                   file,
                   frontmatter,
-                  "selection"
-                )
+                  "selection",
+                ),
               );
           });
         }
@@ -89,11 +98,11 @@ export default class ExportImagePlugin extends Plugin {
                 editor.getValue(),
                 file,
                 frontmatter,
-                "file"
-              )
+                "file",
+              ),
             );
         });
-      })
+      }),
     );
 
     this.addCommand({
@@ -121,7 +130,7 @@ export default class ExportImagePlugin extends Plugin {
               markdown,
               activeFile,
               frontmatter,
-              "file"
+              "file",
             );
           })();
         }
@@ -136,9 +145,9 @@ export default class ExportImagePlugin extends Plugin {
       editorCheckCallback: (
         checking: boolean,
         editor: Editor,
-        view: MarkdownView
+        ctx: MarkdownView | MarkdownFileInfo,
       ) => {
-        const file = view.file;
+        const file = ctx.file;
         if (!file || !["md", "markdown"].includes(file.extension)) {
           return false;
         }
@@ -154,7 +163,7 @@ export default class ExportImagePlugin extends Plugin {
             selection,
             file,
             frontmatter,
-            "selection"
+            "selection",
           );
         }
         return true;
@@ -170,10 +179,18 @@ export default class ExportImagePlugin extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = {
+    const loaded = ((await this.loadData()) as Partial<ISettings> | null) ?? {};
+    const mergedSettings = {
       ...DEFAULT_SETTINGS,
-      ...((await this.loadData()) as ISettings),
-    };
+      ...loaded,
+    } as ISettings;
+
+    const beforeMigration = JSON.stringify(mergedSettings);
+    this.settings = migrateLegacySettings(mergedSettings, loaded);
+
+    if (JSON.stringify(this.settings) !== beforeMigration) {
+      await this.saveData(this.settings);
+    }
   }
 
   async saveSettings() {
