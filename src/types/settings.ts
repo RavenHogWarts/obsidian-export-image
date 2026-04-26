@@ -22,6 +22,8 @@ export const DEFAULT_SETTINGS: ISettings = {
     show: false,
     align: "right",
     position: "bottom",
+    showTop: false,
+    showBottom: true,
   },
   watermark: {
     enable: false,

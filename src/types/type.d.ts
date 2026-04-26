@@ -28,6 +28,14 @@ declare type ISettings = {
     avatar?: string;
     align?: "left" | "center" | "right";
     position?: "top" | "bottom";
+    showTop?: boolean;
+    showBottom?: boolean;
+    topName?: string;
+    topRemark?: string;
+    topAvatar?: string;
+    bottomName?: string;
+    bottomRemark?: string;
+    bottomAvatar?: string;
   };
   watermark: {
     enable: boolean;
